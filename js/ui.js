@@ -25,8 +25,9 @@
   // ── State ─────────────────────────────────────────────────────────────────
 
   let abusif = false;
+  let preavisEffectue = false;
 
-  // ── Abusif toggle ─────────────────────────────────────────────────────────
+  // ── Abusif & Preavis toggles ──────────────────────────────────────────────
 
   const btnNon = $('abusif-non');
   const btnOui = $('abusif-oui');
@@ -40,6 +41,20 @@
     abusif = true;
     btnOui.classList.add('active');
     btnNon.classList.remove('active');
+  });
+
+  const btnPreNon = $('preavis-non');
+  const btnPreOui = $('preavis-oui');
+
+  btnPreNon.addEventListener('click', () => {
+    preavisEffectue = false;
+    btnPreNon.classList.add('active');
+    btnPreOui.classList.remove('active');
+  });
+  btnPreOui.addEventListener('click', () => {
+    preavisEffectue = true;
+    btnPreOui.classList.add('active');
+    btnPreNon.classList.remove('active');
   });
 
   // ── Ancienneté live display ────────────────────────────────────────────────
@@ -126,8 +141,8 @@
         ['Catégorie', inp.categorie === 'cadre' ? 'Cadre' : 'Non-cadre'],
         ['Ancienneté totale', ancienneteLabel(inp.totalMois)],
         ['Délai de préavis', r.preavis.label],
-        ['Salaire mensuel brut', fmt(inp.salaire)],
-        ['Calcul', `${fmt(inp.salaire)} × ${fmtN(r.preavis.moisEquiv)} mois`],
+        ['Statut', inp.preavisEffectue ? 'Préavis effectué' : 'Préavis non effectué (dispensé)'],
+        ['Calcul', inp.preavisEffectue ? '0 MAD (payé en salaire normal)' : `${fmt(inp.salaire)} × ${fmtN(r.preavis.moisEquiv)} mois`],
       ],
       total: fmt(r.preavis.montant),
       note: 'L\'indemnité de préavis est imposable (IR).'
@@ -262,7 +277,8 @@
       mois: parseInt($('mois').value) || 0,
       categorie: $('categorie').value,
       conges: parseFloat($('conges').value) || 0,
-      abusif
+      abusif,
+      preavisEffectue
     };
 
     const errors = validate(inputs);
@@ -296,6 +312,9 @@
     abusif = false;
     btnNon.classList.add('active');
     btnOui.classList.remove('active');
+    preavisEffectue = false;
+    btnPreNon.classList.add('active');
+    btnPreOui.classList.remove('active');
     $('results-content').classList.add('hidden');
     $('results-placeholder').classList.remove('hidden');
     clearErrors();
