@@ -119,7 +119,7 @@ function calculate(inputs) {
     categorie,
     conges: joursConges,
     abusif,
-    dispensePreavis
+    preavisTravaille
   } = inputs;
 
   const totalMois = (annees * 12) + (moisSup || 0);
@@ -127,7 +127,7 @@ function calculate(inputs) {
 
   // 1. Préavis
   const preavis = getPreavis(categorie, totalMois);
-  const montantPreavis = dispensePreavis ? +(salaire * preavis.moisEquiv).toFixed(2) : 0;
+  const montantPreavis = preavisTravaille ? 0 : +(salaire * preavis.moisEquiv).toFixed(2);
 
   // 2. Licenciement
   const licData = calcHeuresLicenciement(totalMois);
