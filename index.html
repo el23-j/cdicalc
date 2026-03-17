@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calcul Indemnités CDI — Droit Marocain</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="header-badge">Code du Travail Marocain</div>
+      <h1 class="site-title">Calculateur d'Indemnités<br/><span class="title-accent">CDI</span></h1>
+      <p class="site-sub">Obtenez une simulation détaillée de vos droits en cas de rupture de contrat à durée indéterminée, selon la législation marocaine en vigueur.</p>
+    </div>
+    <div class="header-deco" aria-hidden="true">
+      <span class="deco-art1">المغرب</span>
+      <span class="deco-line"></span>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="main-layout">
+
+    <!-- FORM PANEL -->
+    <section class="form-panel" id="form-panel">
+      <div class="panel-label">01 — Vos informations</div>
+
+      <form id="calc-form" novalidate>
+
+        <fieldset class="field-group">
+          <legend class="field-legend">Contrat & Catégorie</legend>
+
+          <div class="field-row two-col">
+            <div class="field">
+              <label for="categorie">Catégorie professionnelle</label>
+              <div class="select-wrap">
+                <select id="categorie" name="categorie" required>
+                  <option value="non-cadre">Employé / Ouvrier (non-cadre)</option>
+                  <option value="cadre">Cadre ou assimilé</option>
+                </select>
+                <span class="select-arrow">↓</span>
+              </div>
+            </div>
+            <div class="field">
+              <label for="salaire">Salaire mensuel brut</label>
+              <div class="input-wrap">
+                <input type="number" id="salaire" name="salaire" placeholder="ex: 12 000" min="1" required />
+                <span class="input-unit">MAD</span>
+              </div>
+              <span class="field-hint">Salaire de base brut mensuel</span>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="field-group">
+          <legend class="field-legend">Ancienneté</legend>
+          <div class="field-row two-col">
+            <div class="field">
+              <label for="annees">Années complètes</label>
+              <div class="input-wrap">
+                <input type="number" id="annees" name="annees" placeholder="0" min="0" max="50" value="0" required />
+                <span class="input-unit">ans</span>
+              </div>
+            </div>
+            <div class="field">
+              <label for="mois">Mois supplémentaires</label>
+              <div class="input-wrap">
+                <input type="number" id="mois" name="mois" placeholder="0" min="0" max="11" value="0" required />
+                <span class="input-unit">mois</span>
+              </div>
+              <span class="field-hint">0 à 11 mois en sus des années</span>
+            </div>
+          </div>
+          <div class="anciennete-display" id="anciennete-display">—</div>
+        </fieldset>
+
+        <fieldset class="field-group">
+          <legend class="field-legend">Conditions de la rupture</legend>
+
+          <div class="field-row two-col">
+            <div class="field">
+              <label for="conges">Congés payés non pris</label>
+              <div class="input-wrap">
+                <input type="number" id="conges" name="conges" placeholder="0" min="0" value="0" />
+                <span class="input-unit">jours</span>
+              </div>
+              <span class="field-hint">Jours de congé non pris à la date de rupture</span>
+            </div>
+            <div class="field abusif-field">
+              <label>Licenciement abusif ?</label>
+              <div class="toggle-group" role="group" aria-label="Licenciement abusif">
+                <button type="button" class="toggle-btn active" id="abusif-non" data-val="non">Non</button>
+                <button type="button" class="toggle-btn" id="abusif-oui" data-val="oui">Oui</button>
+              </div>
+              <span class="field-hint">Sans motif valable ou procédure non respectée</span>
+            </div>
+          </div>
+        </fieldset>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-calculate" id="btn-calculate">
+            <span class="btn-text">Calculer mes droits</span>
+            <span class="btn-arrow">→</span>
+          </button>
+          <button type="button" class="btn-reset" id="btn-reset">Réinitialiser</button>
+        </div>
+
+      </form>
+    </section>
+
+    <!-- RESULTS PANEL -->
+    <section class="results-panel" id="results-panel" aria-live="polite">
+      <div class="results-placeholder" id="results-placeholder">
+        <div class="placeholder-icon">⚖</div>
+        <p>Remplissez le formulaire et cliquez sur <strong>Calculer</strong> pour obtenir votre simulation.</p>
+      </div>
+
+      <div class="results-content hidden" id="results-content">
+
+        <div class="panel-label">02 — Résultats de simulation</div>
+
+        <!-- Summary cards -->
+        <div class="summary-grid" id="summary-grid"></div>
+
+        <!-- Detailed breakdown -->
+        <div class="breakdown-section">
+          <h2 class="breakdown-title">Détail des calculs</h2>
+          <div class="breakdown-cards" id="breakdown-cards"></div>
+        </div>
+
+        <!-- Formula recap -->
+        <div class="formula-section">
+          <h3 class="formula-title">Base de calcul</h3>
+          <div class="formula-grid" id="formula-grid"></div>
+        </div>
+
+        <!-- Tax note -->
+        <div class="tax-note" id="tax-note"></div>
+
+        <!-- Actions -->
+        <div class="results-actions">
+          <button class="btn-print" onclick="window.print()">
+            <span>Imprimer / Exporter PDF</span>
+            <span class="btn-arrow-sm">↗</span>
+          </button>
+          <button class="btn-secondary" id="btn-modify">Modifier les données</button>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p class="footer-legal">
+        <strong>Avertissement légal :</strong> Cette simulation est fournie à titre indicatif uniquement et ne constitue pas un avis juridique. Les calculs sont basés sur les dispositions du Code du Travail marocain (Loi n° 65-99) et du Décret 2-04-469. En cas de litige, consultez un avocat ou l'Inspection du Travail.
+      </p>
+      <p class="footer-refs">Références : Art. 41, 51, 52, 53 — Code du Travail • Décret 2-04-469 • Loi de Finances 2023</p>
+    </div>
+  </footer>
+
+  <!-- PRINT WATERMARK (visible only on print) -->
+  <div class="print-watermark" aria-hidden="true">Simulation — Calcul indemnités CDI — Droit Marocain</div>
+
+  <script src="js/calculator.js"></script>
+  <script src="js/ui.js"></script>
+</body>
+</html>
