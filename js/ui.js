@@ -43,19 +43,21 @@
     btnNon.classList.remove('active');
   });
 
-  const btnPreNon = $('preavis-non');
-  const btnPreOui = $('preavis-oui');
+  const btnPreNon = document.getElementById('preavis-non');
+  const btnPreOui = document.getElementById('preavis-oui');
 
-  btnPreNon.addEventListener('click', () => {
-    preavisEffectue = false;
-    btnPreNon.classList.add('active');
-    btnPreOui.classList.remove('active');
-  });
-  btnPreOui.addEventListener('click', () => {
-    preavisEffectue = true;
-    btnPreOui.classList.add('active');
-    btnPreNon.classList.remove('active');
-  });
+  if (btnPreNon && btnPreOui) {
+    btnPreNon.addEventListener('click', () => {
+      preavisEffectue = false;
+      btnPreNon.classList.add('active');
+      btnPreOui.classList.remove('active');
+    });
+    btnPreOui.addEventListener('click', () => {
+      preavisEffectue = true;
+      btnPreOui.classList.add('active');
+      btnPreNon.classList.remove('active');
+    });
+  }
 
   // ── Ancienneté live display ────────────────────────────────────────────────
 
