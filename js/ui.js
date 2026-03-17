@@ -246,9 +246,15 @@
 
   // ── Form Submit ───────────────────────────────────────────────────────────
 
-  $('calc-form').addEventListener('submit', function (e) {
+  $('btn-calculate').addEventListener('click', function (e) {
     e.preventDefault();
     clearErrors();
+
+    const form = $('calc-form');
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
 
     const inputs = {
       salaire: parseFloat($('salaire').value) || 0,

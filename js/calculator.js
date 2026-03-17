@@ -12,12 +12,15 @@ const HEURES_MOIS = 191; // Standard working hours per month (Art. 184)
  * Décret 2-04-469
  */
 function getPreavis(categorie, totalMois) {
+  if (totalMois === 0) return { jours: 0, label: '0 jours', moisEquiv: 0 };
+
   if (categorie === 'cadre') {
     if (totalMois < 12) return { jours: 30,  label: '1 mois',  moisEquiv: 1 };
     if (totalMois <= 60) return { jours: 60,  label: '2 mois',  moisEquiv: 2 };
     return               { jours: 90,  label: '3 mois',  moisEquiv: 3 };
   } else {
-    if (totalMois < 12) return { jours: 8,   label: '8 jours', moisEquiv: 8 / 30 };
+    // 8 days relative to 26 working days in a month
+    if (totalMois < 12) return { jours: 8,   label: '8 jours', moisEquiv: 8 / 26 };
     if (totalMois <= 60) return { jours: 30,  label: '1 mois',  moisEquiv: 1 };
     return               { jours: 60,  label: '2 mois',  moisEquiv: 2 };
   }
@@ -75,6 +78,8 @@ function calcHeuresLicenciement(totalMois) {
  * 1.5 months salary per year, capped at 36 months total
  */
 function calcDommagesInterets(salaireMensuel, totalMois) {
+  if (totalMois === 0) return { moisCalc: 0, montant: 0, capped: false };
+
   const annees = totalMois / 12;
   const moisCalc = Math.min(annees * 1.5, 36);
   const montant = moisCalc * salaireMensuel;
@@ -90,13 +95,15 @@ function calcDommagesInterets(salaireMensuel, totalMois) {
  * 2.5 days per month worked (Art. 238)
  */
 function calcConges(salaireMensuel, totalMois, joursNonPris) {
+  // 2.5 days earned per month
   const joursAcquisTheoriques = +(totalMois * 2.5).toFixed(2);
-  const joursTravailles = salaireMensuel / 26; // ~26 working days/month
-  const montant = +(joursNonPris * joursTravailles).toFixed(2);
+  // Strictly 26 working days/month for daily rate
+  const tauxJournalier = salaireMensuel / 26; 
+  const montant = +(joursNonPris * tauxJournalier).toFixed(2);
   return {
     joursNonPris,
     joursAcquisTheoriques,
-    tauxJournalier: +joursTravailles.toFixed(2),
+    tauxJournalier: +tauxJournalier.toFixed(2),
     montant
   };
 }
