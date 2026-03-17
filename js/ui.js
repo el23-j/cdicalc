@@ -25,7 +25,7 @@
   // ── State ─────────────────────────────────────────────────────────────────
 
   let abusif = false;
-  let preavisEffectue = false;
+  let dispensePreavis = true;
 
   // ── Abusif & Preavis toggles ──────────────────────────────────────────────
 
@@ -48,12 +48,12 @@
 
   if (btnPreNon && btnPreOui) {
     btnPreNon.addEventListener('click', () => {
-      preavisEffectue = false;
+      dispensePreavis = false;
       btnPreNon.classList.add('active');
       btnPreOui.classList.remove('active');
     });
     btnPreOui.addEventListener('click', () => {
-      preavisEffectue = true;
+      dispensePreavis = true;
       btnPreOui.classList.add('active');
       btnPreNon.classList.remove('active');
     });
@@ -143,8 +143,8 @@
         ['Catégorie', inp.categorie === 'cadre' ? 'Cadre' : 'Non-cadre'],
         ['Ancienneté totale', ancienneteLabel(inp.totalMois)],
         ['Délai de préavis', r.preavis.label],
-        ['Statut', inp.preavisEffectue ? 'Préavis effectué' : 'Préavis non effectué (dispensé)'],
-        ['Calcul', inp.preavisEffectue ? '0 MAD (payé en salaire normal)' : `${fmt(inp.salaire)} × ${fmtN(r.preavis.moisEquiv)} mois`],
+        ['Statut', inp.dispensePreavis ? 'Dispensé (employeur)' : 'Préavis effectué'],
+        ['Calcul', inp.dispensePreavis ? `${fmt(inp.salaire)} × ${fmtN(r.preavis.moisEquiv)} mois` : '0 MAD (déjà rémunéré sous forme de salaire normal)'],
       ],
       total: fmt(r.preavis.montant),
       note: 'L\'indemnité de préavis est imposable (IR).'
@@ -280,7 +280,7 @@
       categorie: $('categorie').value,
       conges: parseFloat($('conges').value) || 0,
       abusif,
-      preavisEffectue
+      dispensePreavis
     };
 
     const errors = validate(inputs);
@@ -314,9 +314,9 @@
     abusif = false;
     btnNon.classList.add('active');
     btnOui.classList.remove('active');
-    preavisEffectue = false;
-    btnPreNon.classList.add('active');
-    btnPreOui.classList.remove('active');
+    dispensePreavis = true;
+    btnPreNon.classList.remove('active');
+    btnPreOui.classList.add('active');
     $('results-content').classList.add('hidden');
     $('results-placeholder').classList.remove('hidden');
     clearErrors();
