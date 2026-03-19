@@ -17,11 +17,22 @@
     </div>
   </header>
 
+  <!-- TABS -->
+  <div class="module-tabs-wrap">
+    <div class="module-tabs">
+      <button class="module-tab active" data-module="cdi">👔 Rupture CDI</button>
+      <button class="module-tab" data-module="cdd">⏳ Rupture CDD</button>
+      <button class="module-tab" data-module="depart">🚶 Départ Volontaire</button>
+      <button class="module-tab" data-module="cnss">🏥 Cotisations CNSS</button>
+      <button class="module-tab" data-module="igr">💸 Calcul IGR / IR</button>
+    </div>
+  </div>
+
   <!-- MAIN -->
   <main class="main-layout">
-    <div class="app-container">
 
-      <!-- FORM PANEL -->
+    <!-- CDI PANEL -->
+    <div class="module-panel active" id="panel-cdi">
       <section class="card-section form-panel" id="form-panel">
         <h2 class="panel-label" data-step="1">Vos informations</h2>
 
@@ -114,7 +125,6 @@
         </form>
       </section>
 
-      <!-- RESULTS PANEL -->
       <section class="card-section results-panel" id="results-panel" aria-live="polite">
         
         <div class="results-placeholder" id="results-placeholder">
@@ -146,8 +156,300 @@
         </div>
 
       </section>
-
     </div>
+
+    <!-- CDD PANEL -->
+    <div class="module-panel" id="panel-cdd">
+      <section class="card-section form-panel">
+        <h2 class="panel-label" data-step="1">Vos informations CDD</h2>
+        <form id="calc-form-cdd" novalidate>
+          <fieldset class="field-group">
+            <legend class="field-legend">Contrat &amp; Salaire</legend>
+            <div class="field-row two-col">
+              <div class="field">
+                <label for="cdd-salaire">Salaire mensuel brut</label>
+                <div class="input-wrap">
+                  <input type="number" id="cdd-salaire" placeholder="ex: 12000" min="1" step="0.01" required />
+                  <span class="input-unit">MAD</span>
+                </div>
+              </div>
+            </div>
+            <div class="field-row two-col" style="margin-top:16px">
+              <div class="field">
+                <label for="cdd-total-duree">Durée totale du CDD</label>
+                <div class="input-wrap">
+                  <input type="number" id="cdd-total-duree" placeholder="ex: 12" min="1" max="24" required />
+                  <span class="input-unit">mois</span>
+                </div>
+                <span class="field-hint">Max 24 mois (Art. 16)</span>
+              </div>
+              <div class="field">
+                <label for="cdd-mois-travailles">Mois déjà travaillés</label>
+                <div class="input-wrap">
+                  <input type="number" id="cdd-mois-travailles" placeholder="ex: 6" min="0" required />
+                  <span class="input-unit">mois</span>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+          
+          <fieldset class="field-group">
+            <legend class="field-legend">Conditions de rupture</legend>
+            <div class="field-row two-col">
+              <div class="field">
+                <label>À l'initiative de ?</label>
+                <div class="toggle-group" role="group">
+                  <button type="button" class="toggle-btn active" id="cdd-init-employeur" data-val="employeur">Employeur</button>
+                  <button type="button" class="toggle-btn" id="cdd-init-employe" data-val="employe">Employé</button>
+                </div>
+              </div>
+              <div class="field">
+                <label for="cdd-conges">Congés payés restants</label>
+                <div class="input-wrap">
+                  <input type="number" id="cdd-conges" placeholder="0" min="0" step="0.5" value="0" />
+                  <span class="input-unit">jours</span>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+
+          <div class="form-actions">
+            <button type="button" class="btn-reset" id="btn-reset-cdd">Réinitialiser</button>
+            <button type="submit" class="btn-calculate" id="btn-calculate-cdd">Calculer le CDD</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="card-section results-panel" aria-live="polite">
+        <div class="results-placeholder" id="results-placeholder-cdd">
+          <div class="placeholder-icon">📄</div>
+          <p>Remplissez le formulaire ci-dessus pour simuler la rupture du CDD.</p>
+        </div>
+        <div class="results-content hidden" id="results-content-cdd">
+          <h2 class="panel-label" data-step="2">Résultat de l'estimation CDD</h2>
+          <div class="summary-grid" id="summary-grid-cdd"></div>
+          <div class="breakdown-section">
+            <h3 class="breakdown-title">Détail des calculs</h3>
+            <div id="breakdown-cards-cdd"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- DEPART VOLONTAIRE PANEL -->
+    <div class="module-panel" id="panel-depart">
+      <section class="card-section form-panel">
+        <h2 class="panel-label" data-step="1">Départ Volontaire</h2>
+        <form id="calc-form-depart" novalidate>
+          <fieldset class="field-group">
+            <legend class="field-legend">Informations</legend>
+            <div class="field-row two-col">
+              <div class="field">
+                <label for="depart-salaire">Salaire mensuel brut</label>
+                <div class="input-wrap">
+                  <input type="number" id="depart-salaire" placeholder="ex: 12000" min="1" step="0.01" required />
+                  <span class="input-unit">MAD</span>
+                </div>
+              </div>
+              <div class="field">
+                <label for="depart-categorie">Catégorie</label>
+                <div class="select-wrap">
+                  <select id="depart-categorie" required>
+                    <option value="non-cadre">Non-cadre</option>
+                    <option value="cadre">Cadre</option>
+                  </select>
+                  <span class="select-arrow">▼</span>
+                </div>
+              </div>
+            </div>
+            <div class="field-row two-col" style="margin-top:16px">
+              <div class="field">
+                <label for="depart-annees">Années complètes</label>
+                <div class="input-wrap">
+                  <input type="number" id="depart-annees" placeholder="0" min="0" value="0" required />
+                  <span class="input-unit">ans</span>
+                </div>
+              </div>
+              <div class="field">
+                <label for="depart-mois">Mois sup.</label>
+                <div class="input-wrap">
+                  <input type="number" id="depart-mois" placeholder="0" min="0" max="11" value="0" required />
+                  <span class="input-unit">mois</span>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="field-group">
+            <legend class="field-legend">Départ</legend>
+            <div class="field-row two-col">
+              <div class="field">
+                <label for="depart-motif">Motif de départ</label>
+                <div class="select-wrap">
+                  <select id="depart-motif" required>
+                    <option value="demission">Démission</option>
+                    <option value="retraite_legale">Départ à la retraite légale</option>
+                    <option value="retraite_anticipee">Retraite anticipée (Employeur)</option>
+                  </select>
+                  <span class="select-arrow">▼</span>
+                </div>
+              </div>
+              <div class="field">
+                <label for="depart-conges">Congés payés restants</label>
+                <div class="input-wrap">
+                  <input type="number" id="depart-conges" placeholder="0" min="0" step="0.5" value="0" />
+                  <span class="input-unit">jours</span>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+
+          <div class="form-actions">
+            <button type="button" class="btn-reset" id="btn-reset-depart">Réinitialiser</button>
+            <button type="submit" class="btn-calculate" id="btn-calculate-depart">Calculer le Départ</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="card-section results-panel" aria-live="polite">
+        <div class="results-placeholder" id="results-placeholder-depart">
+          <div class="placeholder-icon">📄</div>
+          <p>Remplissez le formulaire de départ volontaire.</p>
+        </div>
+        <div class="results-content hidden" id="results-content-depart">
+          <h2 class="panel-label" data-step="2">Résultat</h2>
+          <div class="summary-grid" id="summary-grid-depart"></div>
+          <div class="breakdown-section">
+            <h3 class="breakdown-title">Détail des calculs</h3>
+            <div id="breakdown-cards-depart"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- CNSS PANEL -->
+    <div class="module-panel" id="panel-cnss">
+      <section class="card-section form-panel">
+        <h2 class="panel-label" data-step="1">Simulation CNSS 2024</h2>
+        <form id="calc-form-cnss" novalidate>
+          <fieldset class="field-group">
+            <legend class="field-legend">Informations</legend>
+            <div class="field-row two-col">
+              <div class="field">
+                <label for="cnss-salaire">Salaire mensuel brut</label>
+                <div class="input-wrap">
+                  <input type="number" id="cnss-salaire" placeholder="ex: 12000" min="1" step="0.01" required />
+                  <span class="input-unit">MAD</span>
+                </div>
+              </div>
+              <div class="field">
+                <label for="cnss-employes">Nombre de salariés</label>
+                <div class="input-wrap">
+                  <input type="number" id="cnss-employes" placeholder="1" min="1" value="1" required />
+                  <span class="input-unit">salariés</span>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+          <div class="form-actions">
+            <button type="button" class="btn-reset" id="btn-reset-cnss">Réinitialiser</button>
+            <button type="submit" class="btn-calculate" id="btn-calculate-cnss">Calculer CNSS</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="card-section results-panel" aria-live="polite">
+        <div class="results-placeholder" id="results-placeholder-cnss">
+          <div class="placeholder-icon">📄</div>
+          <p>Remplissez le formulaire de charges sociales.</p>
+        </div>
+        <div class="results-content hidden" id="results-content-cnss">
+          <h2 class="panel-label" data-step="2">Cotisations</h2>
+          <div class="summary-grid" id="summary-grid-cnss"></div>
+          <div class="breakdown-section">
+            <h3 class="breakdown-title">Détail des branches</h3>
+            <div id="breakdown-cards-cnss"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- IGR PANEL -->
+    <div class="module-panel" id="panel-igr">
+      <section class="card-section form-panel">
+        <h2 class="panel-label" data-step="1">Simulation IGR 2024</h2>
+        <form id="calc-form-igr" novalidate>
+          <fieldset class="field-group">
+            <legend class="field-legend">Salaire & Exonérations</legend>
+            <div class="field-row two-col">
+              <div class="field">
+                <label for="igr-salaire">Salaire mensuel brut</label>
+                <div class="input-wrap">
+                  <input type="number" id="igr-salaire" placeholder="ex: 12000" min="1" step="0.01" required />
+                  <span class="input-unit">MAD</span>
+                </div>
+              </div>
+              <div class="field">
+                <label for="igr-cnss">Déduction CNSS</label>
+                <div class="input-wrap">
+                  <input type="number" id="igr-cnss" placeholder="Auto" min="0" step="0.01" value="0" />
+                  <span class="input-unit">MAD</span>
+                </div>
+                <span class="field-hint">0 = Calcul automatique 2024</span>
+              </div>
+            </div>
+            <div class="field-row two-col" style="margin-top:16px;">
+              <div class="field">
+                <label for="igr-pension">Assurance / Retraite comp.</label>
+                <div class="input-wrap">
+                  <input type="number" id="igr-pension" placeholder="0" min="0" step="0.01" value="0" />
+                  <span class="input-unit">MAD</span>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+          <fieldset class="field-group">
+            <legend class="field-legend">Charges familiales</legend>
+            <div class="field-row two-col">
+              <div class="field">
+                <label for="igr-enfants">Enfants à charge</label>
+                <div class="input-wrap">
+                  <input type="number" id="igr-enfants" placeholder="0" min="0" max="6" value="0" />
+                  <span class="input-unit">enf.</span>
+                </div>
+              </div>
+              <div class="field">
+                <label>Marié(e) ?</label>
+                <div class="toggle-group" role="group">
+                  <button type="button" class="toggle-btn active" id="igr-marie-non" data-val="non">Non</button>
+                  <button type="button" class="toggle-btn" id="igr-marie-oui" data-val="oui">Oui</button>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+          <div class="form-actions">
+            <button type="button" class="btn-reset" id="btn-reset-igr">Réinitialiser</button>
+            <button type="submit" class="btn-calculate" id="btn-calculate-igr">Calculer IGR</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="card-section results-panel" aria-live="polite">
+        <div class="results-placeholder" id="results-placeholder-igr">
+          <div class="placeholder-icon">📄</div>
+          <p>Remplissez le formulaire d'impôt sur le revenu.</p>
+        </div>
+        <div class="results-content hidden" id="results-content-igr">
+          <h2 class="panel-label" data-step="2">Fiche d'impôt</h2>
+          <div class="summary-grid" id="summary-grid-igr"></div>
+          <div class="breakdown-section">
+            <h3 class="breakdown-title">Détail du barème</h3>
+            <div id="breakdown-cards-igr"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+
   </main>
 
   <!-- FOOTER -->

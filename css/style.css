@@ -127,6 +127,56 @@ code, .mono { font-family: var(--font-mono); font-size: 0.9em; }
   gap: 32px;
 }
 
+/* ── TABS ──────────────────────────────────────────────────────────────── */
+.module-tabs-wrap {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 48px;
+  overflow-x: auto;
+}
+
+.module-tabs {
+  display: flex;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.module-tab {
+  padding: 14px 20px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color .15s, border-color .15s;
+}
+
+.module-tab:hover {
+  color: var(--text-main);
+}
+
+.module-tab.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+}
+
+.module-panel {
+  display: none;
+}
+
+.module-panel.active {
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
 /* Container Cards */
 .card-section {
   background: var(--surface);
@@ -134,6 +184,11 @@ code, .mono { font-family: var(--font-mono); font-size: 0.9em; }
   box-shadow: var(--shadow-md);
   border: 1px solid var(--border);
   padding: 32px;
+}
+
+.form-panel {
+  position: sticky;
+  top: 100px;
 }
 
 /* PANEL LABEL */
@@ -533,6 +588,11 @@ code, .mono { font-family: var(--font-mono); font-size: 0.9em; }
 .footer-refs { font-size: 12px; color: var(--text-light); }
 
 /* ── RESPONSIVE ──────────────────────────────────────────────────────────── */
+@media (max-width: 960px) {
+  .module-panel.active { grid-template-columns: 1fr; }
+  .form-panel { position: static; }
+}
+
 @media (max-width: 768px) {
   .field-row.two-col { flex-direction: column; gap: 16px; }
   .summary-grid { grid-template-columns: 1fr; }
