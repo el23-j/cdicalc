@@ -151,7 +151,28 @@
 
           <div class="results-actions">
             <button class="btn-print" onclick="window.print()">Exporter en PDF</button>
+            <button class="btn-email btn-secondary" data-module="cdi">📧 Recevoir par email (PDF)</button>
             <button class="btn-secondary" id="btn-modify">Modifier les variables</button>
+          </div>
+
+          <div class="email-form-container hidden" id="email-form">
+            <div class="email-form-card">
+              <h4 class="ef-title">Recevoir votre simulation par email</h4>
+              <div class="ef-field">
+                <label for="email-name">Nom (optionnel)</label>
+                <input type="text" id="email-name" placeholder="Ex: Ahmed" />
+              </div>
+              <div class="ef-field">
+                <label for="email-addr">Adresse email *</label>
+                <input type="email" id="email-addr" placeholder="votre@email.com" required />
+              </div>
+              <div class="ef-actions">
+                <button type="button" class="btn-calculate ef-send" data-module="cdi">Envoyer la simulation</button>
+                <button type="button" class="btn-secondary ef-cancel" data-module="cdi">Annuler</button>
+              </div>
+              <div class="ef-status" id="email-status"></div>
+              <p class="ef-legal">🔒 Votre email ne sera jamais partagé</p>
+            </div>
           </div>
         </div>
 
@@ -231,6 +252,31 @@
           <div class="breakdown-section">
             <h3 class="breakdown-title">Détail des calculs</h3>
             <div id="breakdown-cards-cdd"></div>
+          </div>
+
+          <div class="results-actions">
+            <button class="btn-print" onclick="window.print()">Exporter en PDF</button>
+            <button class="btn-email btn-secondary" data-module="cdd">📧 Recevoir par email (PDF)</button>
+          </div>
+
+          <div class="email-form-container hidden" id="email-form-cdd">
+            <div class="email-form-card">
+              <h4 class="ef-title">Recevoir votre simulation par email</h4>
+              <div class="ef-field">
+                <label for="email-name-cdd">Nom (optionnel)</label>
+                <input type="text" id="email-name-cdd" placeholder="Ex: Ahmed" />
+              </div>
+              <div class="ef-field">
+                <label for="email-addr-cdd">Adresse email *</label>
+                <input type="email" id="email-addr-cdd" placeholder="votre@email.com" required />
+              </div>
+              <div class="ef-actions">
+                <button type="button" class="btn-calculate ef-send" data-module="cdd">Envoyer la simulation</button>
+                <button type="button" class="btn-secondary ef-cancel" data-module="cdd">Annuler</button>
+              </div>
+              <div class="ef-status" id="email-status-cdd"></div>
+              <p class="ef-legal">🔒 Votre email ne sera jamais partagé</p>
+            </div>
           </div>
         </div>
       </section>
@@ -323,6 +369,31 @@
             <h3 class="breakdown-title">Détail des calculs</h3>
             <div id="breakdown-cards-depart"></div>
           </div>
+
+          <div class="results-actions">
+            <button class="btn-print" onclick="window.print()">Exporter en PDF</button>
+            <button class="btn-email btn-secondary" data-module="depart">📧 Recevoir par email (PDF)</button>
+          </div>
+
+          <div class="email-form-container hidden" id="email-form-depart">
+            <div class="email-form-card">
+              <h4 class="ef-title">Recevoir votre simulation par email</h4>
+              <div class="ef-field">
+                <label for="email-name-depart">Nom (optionnel)</label>
+                <input type="text" id="email-name-depart" placeholder="Ex: Ahmed" />
+              </div>
+              <div class="ef-field">
+                <label for="email-addr-depart">Adresse email *</label>
+                <input type="email" id="email-addr-depart" placeholder="votre@email.com" required />
+              </div>
+              <div class="ef-actions">
+                <button type="button" class="btn-calculate ef-send" data-module="depart">Envoyer la simulation</button>
+                <button type="button" class="btn-secondary ef-cancel" data-module="depart">Annuler</button>
+              </div>
+              <div class="ef-status" id="email-status-depart"></div>
+              <p class="ef-legal">🔒 Votre email ne sera jamais partagé</p>
+            </div>
+          </div>
         </div>
       </section>
     </div>
@@ -369,6 +440,31 @@
           <div class="breakdown-section">
             <h3 class="breakdown-title">Détail des branches</h3>
             <div id="breakdown-cards-cnss"></div>
+          </div>
+
+          <div class="results-actions">
+            <button class="btn-print" onclick="window.print()">Exporter en PDF</button>
+            <button class="btn-email btn-secondary" data-module="cnss">📧 Recevoir par email (PDF)</button>
+          </div>
+
+          <div class="email-form-container hidden" id="email-form-cnss">
+            <div class="email-form-card">
+              <h4 class="ef-title">Recevoir votre simulation par email</h4>
+              <div class="ef-field">
+                <label for="email-name-cnss">Nom (optionnel)</label>
+                <input type="text" id="email-name-cnss" placeholder="Ex: Ahmed" />
+              </div>
+              <div class="ef-field">
+                <label for="email-addr-cnss">Adresse email *</label>
+                <input type="email" id="email-addr-cnss" placeholder="votre@email.com" required />
+              </div>
+              <div class="ef-actions">
+                <button type="button" class="btn-calculate ef-send" data-module="cnss">Envoyer la simulation</button>
+                <button type="button" class="btn-secondary ef-cancel" data-module="cnss">Annuler</button>
+              </div>
+              <div class="ef-status" id="email-status-cnss"></div>
+              <p class="ef-legal">🔒 Votre email ne sera jamais partagé</p>
+            </div>
           </div>
         </div>
       </section>
@@ -446,6 +542,31 @@
             <h3 class="breakdown-title">Détail du barème</h3>
             <div id="breakdown-cards-igr"></div>
           </div>
+
+          <div class="results-actions">
+            <button class="btn-print" onclick="window.print()">Exporter en PDF</button>
+            <button class="btn-email btn-secondary" data-module="igr">📧 Recevoir par email (PDF)</button>
+          </div>
+
+          <div class="email-form-container hidden" id="email-form-igr">
+            <div class="email-form-card">
+              <h4 class="ef-title">Recevoir votre simulation par email</h4>
+              <div class="ef-field">
+                <label for="email-name-igr">Nom (optionnel)</label>
+                <input type="text" id="email-name-igr" placeholder="Ex: Ahmed" />
+              </div>
+              <div class="ef-field">
+                <label for="email-addr-igr">Adresse email *</label>
+                <input type="email" id="email-addr-igr" placeholder="votre@email.com" required />
+              </div>
+              <div class="ef-actions">
+                <button type="button" class="btn-calculate ef-send" data-module="igr">Envoyer la simulation</button>
+                <button type="button" class="btn-secondary ef-cancel" data-module="igr">Annuler</button>
+              </div>
+              <div class="ef-status" id="email-status-igr"></div>
+              <p class="ef-legal">🔒 Votre email ne sera jamais partagé</p>
+            </div>
+          </div>
         </div>
       </section>
     </div>
@@ -463,7 +584,11 @@
     </div>
   </footer>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+  <script src="js/config.js"></script>
   <script src="js/calculator.js"></script>
   <script src="js/ui.js"></script>
+  <script src="js/email.js"></script>
 </body>
 </html>
