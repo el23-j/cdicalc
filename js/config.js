@@ -1,6 +1,6 @@
 const HUQUQPRO_CONFIG = {
   brevo: {
-    apiKey:      "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",
+    apiKey:      "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",
     senderEmail: "rafael.pullian@gmail.com",
     senderName:  "HuquqPro"
   },
