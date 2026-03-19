@@ -145,11 +145,16 @@ code, .mono { font-family: var(--font-mono); font-size: 0.9em; }
   border-bottom: 1px solid var(--border-glass);
   padding: 16px 48px;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.module-tabs-wrap::-webkit-scrollbar {
+  display: none;
 }
 
 .module-tabs {
   display: flex;
-  max-width: 1000px;
+  width: max-content;
   margin: 0 auto;
   gap: 8px;
   background: rgba(241, 245, 249, 0.7);
@@ -625,11 +630,15 @@ code, .mono { font-family: var(--font-mono); font-size: 0.9em; }
 @media (max-width: 768px) {
   .field-row.two-col { flex-direction: column; gap: 16px; }
   .summary-grid { grid-template-columns: 1fr; }
-  .main-layout { padding: 24px 16px; }
+  .main-layout { padding: 16px 12px; }
   .card-section { padding: 24px 16px; }
-  .site-header { padding: 24px 0; }
+  .site-header { padding: 24px 16px; }
   .bc-header { flex-direction: column; align-items: flex-start; gap: 12px; }
   .bc-amount { align-self: flex-start; }
+  
+  .module-tabs-wrap { padding: 12px 16px; }
+  .module-tab { padding: 12px 16px; font-size: 14px; }
+  .site-title { font-size: 1.8rem; }
 }
 
 /* Print */
