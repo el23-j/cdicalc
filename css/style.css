@@ -366,8 +366,7 @@ button {
   box-shadow: var(--shadow-soft);
 }
 
-.module-card-panel,
-.delivery-panel {
+.module-card-panel {
   min-height: 100%;
 }
 
@@ -378,8 +377,7 @@ button {
   display: block;
   position: static;
   margin-top: var(--space-lg);
-  border-top: 1px dashed rgba(215, 226, 236, 0.9);
-  padding-top: var(--space-lg);
+  min-height: auto;
 }
 
 .panel-label {

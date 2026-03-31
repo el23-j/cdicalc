@@ -157,10 +157,10 @@
     $('delivery-placeholder').classList.add('hidden');
     $('delivery-success').classList.add('hidden');
     
-    const activeSection = document.querySelector('.module-panel.active > section');
+    const activePanel = document.querySelector('.module-panel.active');
     const deliveryPanel = $('delivery-panel');
-    if (activeSection && deliveryPanel) {
-      activeSection.appendChild(deliveryPanel);
+    if (activePanel && deliveryPanel) {
+      activePanel.appendChild(deliveryPanel);
       deliveryPanel.classList.add('inline-modal');
     }
 
