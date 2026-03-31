@@ -300,14 +300,25 @@ button {
 }
 
 .module-tabs-wrap {
-  position: sticky;
-  top: 0;
-  z-index: 20;
+  position: static;
   padding: var(--space-xs) 0;
   background: rgba(243, 247, 251, 0.94);
   backdrop-filter: blur(14px);
   border-top: 1px solid rgba(215, 226, 236, 0.8);
   border-bottom: 1px solid rgba(215, 226, 236, 0.8);
+}
+
+@media (min-width: 768px) {
+  .module-tabs-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+}
+@media (max-width: 767px) {
+  .module-tabs-wrap {
+    position: static;
+  }
 }
 
 .module-tabs {
@@ -863,4 +874,42 @@ button {
   .hero-shell {
     gap: var(--space-2xl);
   }
+}
+
+.site-footer {
+  border-top: 1px solid rgba(255,255,255,0.08);
+  margin-top: 3rem;
+  padding: 2rem 1rem;
+}
+.footer-inner {
+  max-width: 680px;
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.footer-brand {
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+.footer-legal {
+  font-size: 0.78rem;
+  opacity: 0.5;
+}
+.footer-meta {
+  font-size: 0.78rem;
+  opacity: 0.6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+.footer-meta a {
+  color: inherit;
+  text-decoration: underline;
+}
+.footer-sep {
+  opacity: 0.4;
 }
