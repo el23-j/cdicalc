@@ -41,8 +41,8 @@
     },
     igr: {
       title: 'Calculateur IGR / IR Salaire Maroc 2026 — HuquqPro',
-      description: 'Simulez le prélèvement mensuel de l\\'IR (Impôt sur le Revenu) au Maroc. Détail RNI et charges familiales.',
-      h1: 'Calcul de l\\'IR (Impôt sur le Revenu)'
+      description: "Simulez le prélèvement mensuel de l'IR (Impôt sur le Revenu) au Maroc. Détail RNI et charges familiales.",
+      h1: "Calcul de l'IR (Impôt sur le Revenu)"
     }
   };
 
