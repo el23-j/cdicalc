@@ -18,10 +18,10 @@
         <h1 class="site-title">Simulations RH marocaines en livraison privée</h1>
         <p class="update-badge">📅 Barèmes mis à jour — 2026 (CNSS, AMO, IR en vigueur)</p>
         <p class="site-sub">
-          Remplissez votre module, lancez la simulation, puis recevez le PDF detaille par email.
+          Remplissez votre module, lancez la simulation, puis recevez le PDF détaillé par email.
         </p>
       </div>
-      <a class="btn-secondary" href="index.html">Retour a l'accueil</a>
+      <a class="btn-secondary" href="index.html">Retour à l'accueil</a>
     </div>
   </header>
 
@@ -41,19 +41,19 @@
       <div class="module-panel active" id="panel-net2brut">
         <section class="card-section module-card-panel">
           <h2 class="panel-label" data-step="1">Net vers Brut</h2>
-          <p class="panel-copy">Indiquez le salaire net que vous recevez reellement sur votre compte. HuquqPro reconstitue le salaire brut correspondant en tenant compte de la CNSS et de l'IR.</p>
+          <p class="panel-copy">Indiquez le salaire net que vous recevez réellement sur votre compte. HuquqPro reconstitue le salaire brut correspondant en tenant compte de la CNSS et de l'IR.</p>
 
           <form id="calc-form-net2brut" novalidate>
             <fieldset class="field-group">
               <legend class="field-legend">Salaire et statut</legend>
               <div class="field-row two-col">
                 <div class="field">
-                  <label for="net2brut-net">Salaire net recu sur votre compte</label>
+                  <label for="net2brut-net">Salaire net reçu sur votre compte</label>
                   <div class="input-wrap">
                     <input type="number" id="net2brut-net" placeholder="Ex : 8 000" min="1" step="0.01" required />
                     <span class="input-unit">MAD</span>
                   </div>
-                  <span class="field-hint">Montant net effectivement verse apres CNSS, IR et eventuelle pension complementaire.</span>
+                  <span class="field-hint">Montant net effectivement versé apres CNSS, IR et éventuelle pension complémentaire.</span>
                 </div>
                 <div class="field">
                   <label for="net2brut-statut">Statut professionnel</label>
@@ -69,12 +69,12 @@
               </div>
               <div class="field-row two-col section-gap">
                 <div class="field">
-                  <label for="net2brut-pension">Pension complementaire</label>
+                  <label for="net2brut-pension">Pension complémentaire</label>
                   <div class="input-wrap">
-                    <input type="number" id="net2brut-pension" placeholder="0" min="0" step="0.01" value="0" />
+                    <input type="number" id="net2brut-pension" placeholder="Ex : 500 (ou 0)" min="0" step="0.01" value="0" />
                     <span class="input-unit">MAD</span>
                   </div>
-                  <span class="field-hint">Laissez 0 si votre bulletin ne contient pas de retenue retraite / assurance complementaire.</span>
+                  <span class="field-hint">Laissez 0 si votre bulletin ne contient pas de retenue retraite / assurance complémentaire.</span>
                 </div>
                 <div class="field"></div>
               </div>
@@ -86,10 +86,10 @@
                 <div class="field">
                   <label for="net2brut-enfants">Enfants a charge</label>
                   <div class="input-wrap">
-                    <input type="number" id="net2brut-enfants" placeholder="0" min="0" max="6" value="0" />
+                    <input type="number" id="net2brut-enfants" placeholder="Ex : 2" min="0" max="6" value="0" />
                     <span class="input-unit">enf.</span>
                   </div>
-                  <span class="field-hint">La reduction familiale IR est plafonnee a 6 enfants.</span>
+                  <span class="field-hint">La reduction familiale IR est plafonnée a 6 enfants.</span>
                 </div>
                 <div class="field">
                   <label>Marie(e) ?</label>
@@ -113,7 +113,7 @@
       <div class="module-panel" id="panel-cdi">
         <section class="card-section module-card-panel">
           <h2 class="panel-label" data-step="1">Rupture CDI</h2>
-          <p class="panel-copy">Renseignez les variables de rupture. Le detail chiffre sera masqué à l'écran et envoye uniquement par email.</p>
+          <p class="panel-copy">Renseignez les variables de rupture. Le détail chiffré sera masqué à l'écran et envoyé uniquement par email.</p>
 
           <form id="calc-form" novalidate>
             <fieldset class="field-group">
@@ -124,7 +124,7 @@
                   <div class="select-wrap">
                     <select id="categorie" name="categorie" required>
                       <option value="non-cadre">Employe / Ouvrier (non-cadre)</option>
-                      <option value="cadre">Cadre ou assimile</option>
+                      <option value="cadre">Cadre ou assimilé</option>
                     </select>
                     <span class="select-arrow" aria-hidden="true">▼</span>
                   </div>
@@ -144,16 +144,16 @@
               <legend class="field-legend">Anciennete</legend>
               <div class="field-row two-col">
                 <div class="field">
-                  <label for="annees">Annees completes</label>
+                  <label for="années">Années complètes</label>
                   <div class="input-wrap">
                     <input type="number" id="annees" name="annees" placeholder="Ex : 5" min="0" max="50" required />
                     <span class="input-unit">ans</span>
                   </div>
                 </div>
                 <div class="field">
-                  <label for="mois">Mois supplementaires</label>
+                  <label for="mois">Mois supplémentaires</label>
                   <div class="input-wrap">
-                    <input type="number" id="mois" name="mois" placeholder="0" min="0" max="11" value="0" required />
+                    <input type="number" id="mois" name="mois" placeholder="Ex : 3" min="0" max="11" value="0" required />
                     <span class="input-unit">mois</span>
                   </div>
                 </div>
@@ -167,7 +167,7 @@
                 <div class="field">
                   <label for="conges">Congés payés restants</label>
                   <div class="input-wrap">
-                    <input type="number" id="conges" name="conges" placeholder="0" min="0" step="0.5" value="0" />
+                    <input type="number" id="conges" name="conges" placeholder="Ex : 12" min="0" step="0.5" value="0" />
                     <span class="input-unit">jours</span>
                   </div>
                   <span class="field-hint">Reliquat de congés non pris</span>
@@ -178,18 +178,18 @@
                     <button type="button" class="toggle-btn active" id="abusif-non">Non</button>
                     <button type="button" class="toggle-btn" id="abusif-oui">Oui</button>
                   </div>
-                  <span class="field-hint">Depart sans motif valable ou procedure irreguliere</span>
+                  <span class="field-hint">Depart sans motif valable ou procedure irrégulière</span>
                 </div>
               </div>
 
               <div class="field-row two-col section-gap">
                 <div class="field">
-                  <label>Periode de préavis travaillée ?</label>
-                  <div class="toggle-group" role="group" aria-label="Periode de préavis travaillée">
+                  <label>Période de préavis travaillée ?</label>
+                  <div class="toggle-group" role="group" aria-label="Periode de preavis travaillee">
                     <button type="button" class="toggle-btn active" id="preavis-non">Oui</button>
                     <button type="button" class="toggle-btn" id="preavis-oui">Non</button>
                   </div>
-                  <span class="field-hint">Si le preavis n'a pas ete travaille, l'indemnite est ajoutee au calcul.</span>
+                  <span class="field-hint">Si le préavis n'a pas été travaillé, l'indemnité est ajoutée au calcul.</span>
                 </div>
                 <div class="field"></div>
               </div>
@@ -206,7 +206,7 @@
       <div class="module-panel" id="panel-cdd">
         <section class="card-section module-card-panel">
           <h2 class="panel-label" data-step="1">Rupture CDD</h2>
-          <p class="panel-copy">Obtenez un PDF privé pour estimer les salaires restants et conges en cas de rupture anticipee.</p>
+          <p class="panel-copy">Obtenez un PDF privé pour estimer les salaires restants et congés en cas de rupture anticipée.</p>
 
           <form id="calc-form-cdd" novalidate>
             <fieldset class="field-group">
@@ -270,7 +270,7 @@
       <div class="module-panel" id="panel-depart">
         <section class="card-section module-card-panel">
           <h2 class="panel-label" data-step="1">Départ volontaire</h2>
-          <p class="panel-copy">Simulez les effets d'une démission ou d'un depart a la retraite avec livraison privee par email.</p>
+          <p class="panel-copy">Simulez les effets d'une démission ou d'un depart a la retraite avec livraison privée par email.</p>
 
           <form id="calc-form-depart" novalidate>
             <fieldset class="field-group">
@@ -296,14 +296,14 @@
               </div>
               <div class="field-row two-col section-gap">
                 <div class="field">
-                  <label for="depart-annees">Annees completes</label>
+                  <label for="depart-années">Années complètes</label>
                   <div class="input-wrap">
-                    <input type="number" id="depart-annees" placeholder="0" min="0" value="0" required />
+                    <input type="number" id="depart-années" placeholder="0" min="0" value="0" required />
                     <span class="input-unit">ans</span>
                   </div>
                 </div>
                 <div class="field">
-                  <label for="depart-mois">Mois supplementaires</label>
+                  <label for="depart-mois">Mois supplémentaires</label>
                   <div class="input-wrap">
                     <input type="number" id="depart-mois" placeholder="0" min="0" max="11" value="0" required />
                     <span class="input-unit">mois</span>
@@ -385,7 +385,7 @@
 
           <form id="calc-form-igr" novalidate>
             <fieldset class="field-group">
-              <legend class="field-legend">Salaire et deductions</legend>
+              <legend class="field-legend">Salaire et déductions</legend>
               <div class="field-row two-col">
                 <div class="field">
                   <label for="igr-salaire">Salaire mensuel brut</label>
@@ -405,7 +405,7 @@
               </div>
               <div class="field-row two-col section-gap">
                 <div class="field">
-                  <label for="igr-pension">Assurance / retraite complementaire</label>
+                  <label for="igr-pension">Assurance / retraite complémentaire</label>
                   <div class="input-wrap">
                     <input type="number" id="igr-pension" placeholder="0" min="0" step="0.01" value="0" />
                     <span class="input-unit">MAD</span>
@@ -449,8 +449,8 @@
       <p class="delivery-copy" id="delivery-copy">Aucun montant n'est affiché à l'écran. Chaque simulation détaillée est livree par email.</p>
 
       <div class="delivery-benefits">
-        <div class="benefit-item">PDF personnalise selon le module actif</div>
-        <div class="benefit-item">Base juridique et variables de calcul resumees</div>
+        <div class="benefit-item">PDF personnalisé selon le module actif</div>
+        <div class="benefit-item">Base juridique et variables de calcul résumées</div>
         <div class="benefit-item">Envoi sécurisé via une fonction serverless</div>
       </div>
 
@@ -500,8 +500,10 @@
   <footer class="site-footer">
     <div class="shell footer-inner">
       <div class="footer-legal">
-        <p>© 2026 HuquqPro — Outil indicatif, ne remplace pas un conseil juridique professionnel.</p>
-        <p><a href="mailto:rafael.pullian@gmail.com">contact@huquqpro.com</a></p>
+        <p>© 2026 HuquqPro — Outil indicatif basé sur le Code du Travail marocain.</p>
+        <p>Ne remplace pas un conseil juridique ou comptable professionnel.</p>
+        <p>Contact : <a href="mailto:rafael.pullian@gmail.com">contact@huquqpro.com</a></p>
+        <p style="margin-top:0.5rem;font-size:0.8rem;opacity:0.7;">📅 Barèmes CNSS, AMO et IR mis à jour — 2026</p>
       </div>
       <a class="footer-link" href="index.html">Retour au site de présentation</a>
     </div>

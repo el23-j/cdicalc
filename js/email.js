@@ -308,7 +308,7 @@
         metaRows: [
           ['Statut', inputs.statut === 'cadre' ? 'Cadre' : 'Non-cadre'],
           ['Situation familiale', familySituation],
-          ['Pension complementaire', fmtMoney(inputs.pension)],
+          ['Pension complémentaire', fmtMoney(inputs.pension)],
           ['Enfants a charge', fmtNumber(inputs.enfants)],
           ['Frais professionnels', fmtMoney(result.fraisPro)],
           ['Base imposable mensuelle', fmtMoney(result.rniMensuel)],
@@ -319,17 +319,17 @@
           ['Moins CNSS pension', fmtMoney(result.pensionCnss)],
           ['Moins AMO', fmtMoney(result.amo)],
           ['Moins IR mensuel', fmtMoney(result.irMensuel)],
-          ['Moins retenue complementaire', fmtMoney(result.pension)],
+          ['Moins retenue complémentaire', fmtMoney(result.pension)],
           ['Egal salaire net', fmtMoney(result.salaireNet)]
         ],
         assumptionRows: [
-          'CNSS pension salariale a 4,48% plafonnee sur une base brute de 6 000 MAD.',
+          'CNSS pension salariale a 4,48% plafonnée sur une base brute de 6 000 MAD.',
           'AMO salariale a 2,26% appliquee sur le brut non plafonne.',
           'Frais professionnels a 20% plafonnes a 2 500 MAD par mois.',
           'Reduction familiale appliquee selon la situation declaree et le nombre d enfants saisis.',
           'Cadre et non-cadre suivent ici les memes taux de base CNSS et AMO.'
         ],
-        legalNote: 'Calcul inverse par dichotomie sur le bareme marocain CNSS + IGR, avec preuve de recalcul avant -> apres retenues.'
+        legalNote: 'Calcul inversé par dichotomie sur le barème marocain CNSS + IGR, avec preuve de recalcul avant -> apres retenues.'
       };
     }
 
@@ -339,17 +339,17 @@
         totalLabel: 'Total estime',
         totalValue: fmtMoney(result.total),
         summaryRows: [
-          ['Indemnite de preavis', fmtMoney(result.preavis.montant)],
-          ['Indemnite de licenciement', result.licenciement.eligible ? fmtMoney(result.licenciement.montant) : 'Non eligible'],
+          ['Indemnité de préavis', fmtMoney(result.préavis.montant)],
+          ['Indemnité de licenciement', result.licenciement.eligible ? fmtMoney(result.licenciement.montant) : 'Non eligible'],
           ['Dommages et interets', result.di ? fmtMoney(result.di.montant) : 'Non applicable'],
           ['Congés payés', fmtMoney(result.conges.montant)]
         ],
         metaRows: [
           ['Salaire mensuel brut', fmtMoney(inputs.salaire)],
-          ['Anciennete', `${inputs.annees} an(s) et ${inputs.mois} mois`],
+          ['Anciennete', `${inputs.années} an(s) et ${inputs.mois} mois`],
           ['Categorie', inputs.categorie === 'cadre' ? 'Cadre' : 'Non-cadre'],
           ['Licenciement abusif', inputs.abusif ? 'Oui' : 'Non'],
-          ['Préavis travaillé', inputs.preavisTravaille ? 'Oui' : 'Non']
+          ['Préavis travaillé', inputs.préavisTravaille ? 'Oui' : 'Non']
         ],
         legalNote: 'Articles 41, 51, 52, 53 et 238 du Code du Travail marocain.'
       };
@@ -381,13 +381,13 @@
         totalLabel: 'Total estime',
         totalValue: fmtMoney(result.total),
         summaryRows: [
-          ['Preavis', fmtMoney(result.preavis.montant)],
-          ['Indemnite de depart', fmtMoney(result.licenciement.montant)],
+          ['Préavis', fmtMoney(result.préavis.montant)],
+          ['Indemnité de depart', fmtMoney(result.licenciement.montant)],
           ['Congés payés', fmtMoney(result.conges.montant)]
         ],
         metaRows: [
           ['Salaire mensuel brut', fmtMoney(inputs.salaire)],
-          ['Anciennete', `${inputs.annees} an(s) et ${inputs.mois} mois`],
+          ['Anciennete', `${inputs.années} an(s) et ${inputs.mois} mois`],
           ['Categorie', inputs.categorie === 'cadre' ? 'Cadre' : 'Non-cadre'],
           ['Motif', inputs.motif],
           ['Congés restants', `${fmtNumber(inputs.conges)} jour(s)`]
@@ -413,7 +413,7 @@
           ['AMO', fmtMoney(result.branches.amo.amountEmp + result.branches.amo.amountPat)],
           ['Vieillesse', fmtMoney(result.branches.vieillesse.amountEmp + result.branches.vieillesse.amountPat)]
         ],
-        legalNote: 'Bareme CNSS 2024, AMO, vieillesse, allocations familiales et accidents du travail.'
+        legalNote: 'Barème CNSS 2024, AMO, vieillesse, allocations familiales et accidents du travail.'
       };
     }
 
@@ -430,11 +430,11 @@
       metaRows: [
         ['Salaire mensuel brut', fmtMoney(inputs.salaire)],
         ['CNSS forcee', fmtMoney(inputs.cnssForce)],
-        ['Pension complementaire', fmtMoney(inputs.pension)],
+        ['Pension complémentaire', fmtMoney(inputs.pension)],
         ['Enfants a charge', fmtNumber(inputs.enfants)],
         ['Marie(e)', inputs.marie ? 'Oui' : 'Non']
       ],
-      legalNote: 'Calcul IGR 2024 selon le bareme progressif et les charges de famille.'
+      legalNote: 'Calcul IGR 2024 selon le barème progressif et les charges de famille.'
     };
   }
 
