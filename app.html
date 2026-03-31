@@ -53,6 +53,10 @@
       <div class="module-panel active" id="panel-net2brut">
         <section class="card-section module-card-panel">
           <h2 class="panel-label" data-step="1">Net vers Brut</h2>
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.8rem;">
+            <div class="update-badge" style="margin: 0;">✅ Barèmes en vigueur : 2026</div>
+            <button type="button" class="btn-secondary share-btn" style="min-height: 2.2rem; padding: 0 0.8rem; font-size: 0.85rem;" onclick="navigator.clipboard.writeText(window.location.href); this.textContent='Lien copié ✓'; setTimeout(()=>this.textContent='Partager ce simulateur',2000);">Partager ce simulateur</button>
+          </div>
           <p class="panel-copy">Indiquez le salaire net que vous recevez réellement sur votre compte. HuquqPro reconstitue le salaire brut correspondant en tenant compte de la CNSS et de l'IR.</p>
 
           <form id="calc-form-net2brut" novalidate>
@@ -125,87 +129,98 @@
       <div class="module-panel" id="panel-cdi">
         <section class="card-section module-card-panel">
           <h2 class="panel-label" data-step="1">Rupture CDI</h2>
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.8rem;">
+            <div class="update-badge" style="margin: 0;">✅ Barèmes en vigueur : 2026</div>
+            <button type="button" class="btn-secondary share-btn" style="min-height: 2.2rem; padding: 0 0.8rem; font-size: 0.85rem;" onclick="navigator.clipboard.writeText(window.location.href); this.textContent='Lien copié ✓'; setTimeout(()=>this.textContent='Partager ce simulateur',2000);">Partager ce simulateur</button>
+          </div>
           <p class="panel-copy">Renseignez les variables de rupture. Le détail chiffré sera masqué à l'écran et envoyé uniquement par email.</p>
 
           <form id="calc-form" novalidate>
-            <fieldset class="field-group">
-              <legend class="field-legend">Contrat et salaire</legend>
-              <div class="field-row two-col">
-                <div class="field">
-                  <label for="categorie">Statut professionnel</label>
-                  <div class="select-wrap">
-                    <select id="categorie" name="categorie" required>
-                      <option value="non-cadre">Employé / Ouvrier (non-cadre)</option>
-                      <option value="cadre">Cadre ou assimilé</option>
-                    </select>
-                    <span class="select-arrow" aria-hidden="true">▼</span>
+            <details class="field-group mobile-accordion" open>
+              <summary class="accordion-header">
+                <span class="field-legend" style="margin:0;">Contrat, Salaire & Ancienneté</span>
+                <span class="accordion-icon" aria-hidden="true">▼</span>
+              </summary>
+              <div class="accordion-content">
+                <div class="field-row two-col">
+                  <div class="field">
+                    <label for="categorie">Statut professionnel</label>
+                    <div class="select-wrap">
+                      <select id="categorie" name="categorie" required>
+                        <option value="non-cadre">Employé / Ouvrier (non-cadre)</option>
+                        <option value="cadre">Cadre ou assimilé</option>
+                      </select>
+                      <span class="select-arrow" aria-hidden="true">▼</span>
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label for="salaire">Salaire mensuel brut</label>
+                    <div class="input-wrap">
+                      <input type="number" id="salaire" name="salaire" placeholder="Ex : 12 000" min="1" step="0.01" required />
+                      <span class="input-unit">MAD</span>
+                    </div>
+                    <span class="field-hint">Salaire brut hors primes variables</span>
                   </div>
                 </div>
-                <div class="field">
-                  <label for="salaire">Salaire mensuel brut</label>
-                  <div class="input-wrap">
-                    <input type="number" id="salaire" name="salaire" placeholder="Ex : 12 000" min="1" step="0.01" required />
-                    <span class="input-unit">MAD</span>
-                  </div>
-                  <span class="field-hint">Salaire brut hors primes variables</span>
-                </div>
-              </div>
-            </fieldset>
 
-            <fieldset class="field-group">
-              <legend class="field-legend">Ancienneté</legend>
-              <div class="field-row two-col">
-                <div class="field">
-                  <label for="annees">Années complètes</label>
-                  <div class="input-wrap">
-                    <input type="number" id="annees" name="annees" placeholder="Ex : 5" min="0" max="50" required />
-                    <span class="input-unit">ans</span>
+                <div class="field-row two-col" style="margin-top: var(--space-sm);">
+                  <div class="field">
+                    <label for="annees">Années complètes</label>
+                    <div class="input-wrap">
+                      <input type="number" id="annees" name="annees" placeholder="Ex : 5" min="0" max="50" required />
+                      <span class="input-unit">ans</span>
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label for="mois">Mois supplémentaires</label>
+                    <div class="input-wrap">
+                      <input type="number" id="mois" name="mois" placeholder="Ex : 3" min="0" max="11" value="0" required />
+                      <span class="input-unit">mois</span>
+                    </div>
                   </div>
                 </div>
-                <div class="field">
-                  <label for="mois">Mois supplémentaires</label>
-                  <div class="input-wrap">
-                    <input type="number" id="mois" name="mois" placeholder="Ex : 3" min="0" max="11" value="0" required />
-                    <span class="input-unit">mois</span>
-                  </div>
-                </div>
+                <div class="anciennete-display" id="anciennete-display">0 mois</div>
               </div>
-              <div class="anciennete-display" id="anciennete-display">0 mois</div>
-            </fieldset>
+            </details>
 
-            <fieldset class="field-group">
-              <legend class="field-legend">Conditions de départ</legend>
-              <div class="field-row two-col">
-                <div class="field">
-                  <label for="conges">Congés payés restants</label>
-                  <div class="input-wrap">
-                    <input type="number" id="conges" name="conges" placeholder="Ex : 12" min="0" step="0.5" value="0" />
-                    <span class="input-unit">jours</span>
+            <details class="field-group mobile-accordion" open>
+              <summary class="accordion-header">
+                <span class="field-legend" style="margin:0;">Conditions de départ</span>
+                <span class="accordion-icon" aria-hidden="true">▼</span>
+              </summary>
+              <div class="accordion-content">
+                <div class="field-row two-col">
+                  <div class="field">
+                    <label for="conges">Congés payés restants</label>
+                    <div class="input-wrap">
+                      <input type="number" id="conges" name="conges" placeholder="Ex : 12" min="0" step="0.5" value="0" />
+                      <span class="input-unit">jours</span>
+                    </div>
+                    <span class="field-hint">Reliquat de congés non pris</span>
                   </div>
-                  <span class="field-hint">Reliquat de congés non pris</span>
-                </div>
-                <div class="field">
-                  <label>Licenciement abusif ?</label>
-                  <div class="toggle-group" role="group" aria-label="Licenciement abusif">
-                    <button type="button" class="toggle-btn active" id="abusif-non">Non</button>
-                    <button type="button" class="toggle-btn" id="abusif-oui">Oui</button>
+                  <div class="field">
+                    <label>Licenciement abusif ?</label>
+                    <div class="toggle-group" role="group" aria-label="Licenciement abusif">
+                      <button type="button" class="toggle-btn active" id="abusif-non">Non</button>
+                      <button type="button" class="toggle-btn" id="abusif-oui">Oui</button>
+                    </div>
+                    <span class="field-hint">Départ sans motif valable ou procédure irrégulière</span>
                   </div>
-                  <span class="field-hint">Départ sans motif valable ou procédure irrégulière</span>
                 </div>
-              </div>
 
-              <div class="field-row two-col section-gap">
-                <div class="field">
-                  <label>Période de préavis travaillée ?</label>
-                  <div class="toggle-group" role="group" aria-label="Période de préavis travaillée">
-                    <button type="button" class="toggle-btn active" id="preavis-non">Non</button>
-                    <button type="button" class="toggle-btn" id="preavis-oui">Oui</button>
+                <div class="field-row two-col section-gap">
+                  <div class="field">
+                    <label>Période de préavis travaillée ?</label>
+                    <div class="toggle-group" role="group" aria-label="Période de préavis travaillée">
+                      <button type="button" class="toggle-btn active" id="preavis-non">Non</button>
+                      <button type="button" class="toggle-btn" id="preavis-oui">Oui</button>
+                    </div>
+                    <span class="field-hint">Si le préavis n'a pas été travaillé, l'indemnité est ajoutée au calcul.</span>
                   </div>
-                  <span class="field-hint">Si le préavis n'a pas été travaillé, l'indemnité est ajoutée au calcul.</span>
+                  <div class="field"></div>
                 </div>
-                <div class="field"></div>
               </div>
-            </fieldset>
+            </details>
 
             <div class="form-actions">
               <button type="button" class="btn-reset" id="btn-reset">Réinitialiser</button>
@@ -218,6 +233,10 @@
       <div class="module-panel" id="panel-cdd">
         <section class="card-section module-card-panel">
           <h2 class="panel-label" data-step="1">Rupture CDD</h2>
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.8rem;">
+            <div class="update-badge" style="margin: 0;">✅ Barèmes en vigueur : 2026</div>
+            <button type="button" class="btn-secondary share-btn" style="min-height: 2.2rem; padding: 0 0.8rem; font-size: 0.85rem;" onclick="navigator.clipboard.writeText(window.location.href); this.textContent='Lien copié ✓'; setTimeout(()=>this.textContent='Partager ce simulateur',2000);">Partager ce simulateur</button>
+          </div>
           <p class="panel-copy">Obtenez un PDF privé pour estimer les salaires restants et congés en cas de rupture anticipée.</p>
 
           <form id="calc-form-cdd" novalidate>
@@ -282,6 +301,10 @@
       <div class="module-panel" id="panel-depart">
         <section class="card-section module-card-panel">
           <h2 class="panel-label" data-step="1">Départ volontaire</h2>
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.8rem;">
+            <div class="update-badge" style="margin: 0;">✅ Barèmes en vigueur : 2026</div>
+            <button type="button" class="btn-secondary share-btn" style="min-height: 2.2rem; padding: 0 0.8rem; font-size: 0.85rem;" onclick="navigator.clipboard.writeText(window.location.href); this.textContent='Lien copié ✓'; setTimeout(()=>this.textContent='Partager ce simulateur',2000);">Partager ce simulateur</button>
+          </div>
           <p class="panel-copy">Simulez les effets d'une démission ou d'un départ à la retraite avec livraison privée par email.</p>
 
           <form id="calc-form-depart" novalidate>
@@ -359,6 +382,10 @@
       <div class="module-panel" id="panel-cnss">
         <section class="card-section module-card-panel">
           <h2 class="panel-label" data-step="1">Cotisations CNSS</h2>
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.8rem;">
+            <div class="update-badge" style="margin: 0;">✅ Barèmes en vigueur : 2026</div>
+            <button type="button" class="btn-secondary share-btn" style="min-height: 2.2rem; padding: 0 0.8rem; font-size: 0.85rem;" onclick="navigator.clipboard.writeText(window.location.href); this.textContent='Lien copié ✓'; setTimeout(()=>this.textContent='Partager ce simulateur',2000);">Partager ce simulateur</button>
+          </div>
           <p class="panel-copy">Calculez les charges sociales salariales et patronales, puis livrez le détail complet par email.</p>
 
           <form id="calc-form-cnss" novalidate>
@@ -393,6 +420,10 @@
       <div class="module-panel" id="panel-igr">
         <section class="card-section module-card-panel">
           <h2 class="panel-label" data-step="1">Calcul IGR / IR</h2>
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.8rem;">
+            <div class="update-badge" style="margin: 0;">✅ Barèmes en vigueur : 2026</div>
+            <button type="button" class="btn-secondary share-btn" style="min-height: 2.2rem; padding: 0 0.8rem; font-size: 0.85rem;" onclick="navigator.clipboard.writeText(window.location.href); this.textContent='Lien copié ✓'; setTimeout(()=>this.textContent='Partager ce simulateur',2000);">Partager ce simulateur</button>
+          </div>
           <p class="panel-copy">Simulez le prélèvement IR mensuel et recevez une fiche privée de calcul en PDF.</p>
 
           <form id="calc-form-igr" novalidate>
@@ -514,9 +545,11 @@
       <p class="footer-brand">© 2025 <strong>HuquqPro</strong></p>
       <p class="footer-legal">Simulation indicative — Ne remplace pas un conseil juridique ou comptable professionnel.</p>
       <div class="footer-meta">
-        <span>📅 Barèmes CNSS, AMO et IR — 2025</span>
+        <span>📅 Barèmes CNSS, AMO et IR — 2026</span>
         <span class="footer-sep">·</span>
         <a href="mailto:contact@huquqpro.com">contact@huquqpro.com</a>
+        <span class="footer-sep">·</span>
+        <a href="/confidentialite.html">Confidentialité</a>
       </div>
     </div>
   </footer>
@@ -544,5 +577,7 @@
   </script>
   <script src="js/calculator.js" defer></script>
   <script src="js/router.js" defer></script>
+  <script src="js/ui.js" defer></script>
+  <script src="js/email.js" defer></script>
 </body>
 </html>

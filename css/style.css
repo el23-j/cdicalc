@@ -288,10 +288,9 @@ button {
 }
 
 .app-main {
-  display: grid;
-  grid-template-columns: minmax(0, 1.22fr) minmax(clamp(18rem, 29vw, 26rem), 0.82fr);
-  gap: var(--space-xl);
-  align-items: start;
+  display: block;
+  max-width: 48rem;
+  margin: 0 auto;
   padding-bottom: var(--space-2xl);
 }
 
@@ -373,8 +372,14 @@ button {
 }
 
 .delivery-panel {
-  position: sticky;
-  top: var(--sticky-top);
+  display: none;
+}
+.delivery-panel.inline-modal {
+  display: block;
+  position: static;
+  margin-top: var(--space-lg);
+  border-top: 1px dashed rgba(215, 226, 236, 0.9);
+  padding-top: var(--space-lg);
 }
 
 .panel-label {
@@ -525,6 +530,44 @@ button {
   border-color: var(--primary);
   background: rgba(15, 106, 134, 0.1);
   color: var(--primary);
+}
+
+.mobile-accordion {
+  margin-top: var(--space-lg);
+}
+.accordion-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  padding-bottom: var(--space-xs);
+  border-bottom: 1px solid rgba(215, 226, 236, 0.4);
+  margin-bottom: var(--space-sm);
+}
+.mobile-accordion > summary {
+  list-style: none;
+}
+.mobile-accordion > summary::-webkit-details-marker {
+  display: none;
+}
+.accordion-icon {
+  font-size: 0.75rem;
+  color: var(--muted);
+  transition: transform 0.2s ease;
+}
+.mobile-accordion[open] .accordion-icon {
+  transform: rotate(180deg);
+}
+
+@media (min-width: 768px) {
+  .accordion-header {
+    cursor: default;
+    pointer-events: none;
+    border-bottom: none;
+  }
+  .accordion-icon {
+    display: none;
+  }
 }
 
 .anciennete-display {
