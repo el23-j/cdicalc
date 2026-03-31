@@ -15,7 +15,7 @@ function roundMoney(value) {
  * Notice period (préavis) duration in calendar days
  * Décret 2-04-469
  */
-function getPréavis(categorie, totalMois) {
+function getPreavis(categorie, totalMois) {
   if (totalMois === 0) return { jours: 0, label: '0 jours', moisEquiv: 0 };
 
   if (categorie === 'cadre') {
@@ -47,7 +47,7 @@ function calcHeuresLicenciement(totalMois) {
   if (s1 > 0) {
     const h = (s1 / 12) * 96;
     heures += h;
-    slabs.push({ label: '0–5 ans', années: +(s1/12).toFixed(4), taux: 96, heures: +h.toFixed(2) });
+    slabs.push({ label: '0–5 ans', annees: +(s1/12).toFixed(4), taux: 96, heures: +h.toFixed(2) });
   }
 
   // Slab 2: 61–120 months (6–10 years) → 144h/year
@@ -55,7 +55,7 @@ function calcHeuresLicenciement(totalMois) {
     const s2 = Math.min(totalMois - 60, 60);
     const h = (s2 / 12) * 144;
     heures += h;
-    slabs.push({ label: '6–10 ans', années: +(s2/12).toFixed(4), taux: 144, heures: +h.toFixed(2) });
+    slabs.push({ label: '6–10 ans', annees: +(s2/12).toFixed(4), taux: 144, heures: +h.toFixed(2) });
   }
 
   // Slab 3: 121–180 months (11–15 years) → 192h/year
@@ -63,7 +63,7 @@ function calcHeuresLicenciement(totalMois) {
     const s3 = Math.min(totalMois - 120, 60);
     const h = (s3 / 12) * 192;
     heures += h;
-    slabs.push({ label: '11–15 ans', années: +(s3/12).toFixed(4), taux: 192, heures: +h.toFixed(2) });
+    slabs.push({ label: '11–15 ans', annees: +(s3/12).toFixed(4), taux: 192, heures: +h.toFixed(2) });
   }
 
   // Slab 4: >180 months (>15 years) → 240h/year
@@ -71,7 +71,7 @@ function calcHeuresLicenciement(totalMois) {
     const s4 = totalMois - 180;
     const h = (s4 / 12) * 240;
     heures += h;
-    slabs.push({ label: '> 15 ans', années: +(s4/12).toFixed(4), taux: 240, heures: +h.toFixed(2) });
+    slabs.push({ label: '> 15 ans', annees: +(s4/12).toFixed(4), taux: 240, heures: +h.toFixed(2) });
   }
 
   return { heures: +heures.toFixed(2), slabs, eligible: true };
@@ -84,13 +84,13 @@ function calcHeuresLicenciement(totalMois) {
 function calcDommagesInterets(salaireMensuel, totalMois) {
   if (totalMois === 0) return { moisCalc: 0, montant: 0, capped: false };
 
-  const années = totalMois / 12;
-  const moisCalc = Math.min(années * 1.5, 36);
+  const annees = totalMois / 12;
+  const moisCalc = Math.min(annees * 1.5, 36);
   const montant = moisCalc * salaireMensuel;
   return {
     moisCalc: +moisCalc.toFixed(2),
     montant: +montant.toFixed(2),
-    capped: années * 1.5 > 36
+    capped: annees * 1.5 > 36
   };
 }
 
@@ -98,7 +98,7 @@ function calcDommagesInterets(salaireMensuel, totalMois) {
  * Paid leave indemnity
  * 2.5 days per month worked (Art. 238)
  */
-function calcCongés(salaireMensuel, totalMois, joursNonPris) {
+function calcConges(salaireMensuel, totalMois, joursNonPris) {
   // 2.5 days earned per month
   const joursAcquisTheoriques = +(totalMois * 2.5).toFixed(2);
   // Strictly 26 working days/month for daily rate
@@ -118,20 +118,20 @@ function calcCongés(salaireMensuel, totalMois, joursNonPris) {
 function calculate(inputs) {
   const {
     salaire,
-    années,
+    annees,
     mois: moisSup,
     categorie,
-    conges: joursCongés,
+    conges: joursConges,
     abusif,
-    préavisTravaille
+    preavisTravaille
   } = inputs;
 
-  const totalMois = (années * 12) + (moisSup || 0);
+  const totalMois = (annees * 12) + (moisSup || 0);
   const tauxHoraire = salaire / HEURES_MOIS;
 
   // 1. Préavis
-  const préavis = getPréavis(categorie, totalMois);
-  const montantPréavis = préavisTravaille ? 0 : +(salaire * préavis.moisEquiv).toFixed(2);
+  const preavis = getPreavis(categorie, totalMois);
+  const montantPreavis = preavisTravaille ? 0 : +(salaire * preavis.moisEquiv).toFixed(2);
 
   // 2. Licenciement
   const licData = calcHeuresLicenciement(totalMois);
@@ -148,17 +148,17 @@ function calculate(inputs) {
   }
 
   // 4. Congés payés
-  const congesData = calcCongés(salaire, totalMois, joursCongés);
-  const montantCongés = congesData.montant;
+  const congesData = calcConges(salaire, totalMois, joursConges);
+  const montantConges = congesData.montant;
 
   // Total
-  const total = montantPréavis + montantLicenciement + montantDI + montantCongés;
+  const total = montantPreavis + montantLicenciement + montantDI + montantConges;
 
   return {
     inputs: { ...inputs, totalMois, tauxHoraire: +tauxHoraire.toFixed(2) },
-    préavis: {
-      ...préavis,
-      montant: montantPréavis
+    preavis: {
+      ...preavis,
+      montant: montantPreavis
     },
     licenciement: {
       ...licData,
@@ -179,7 +179,7 @@ function calcCDD(inputs) {
   const { salaire, totalDuree, moisTravailles, initPar, conges } = inputs;
   const moisRestants = Math.max(0, totalDuree - moisTravailles);
   const tauxJournalier = salaire / 26;
-  const montantCongés = conges * tauxJournalier;
+  const montantConges = conges * tauxJournalier;
   
   let montantSalairesRestants = 0;
   let owesEmployer = false;
@@ -190,13 +190,13 @@ function calcCDD(inputs) {
     owesEmployer = moisRestants > 0;
   }
 
-  const total = montantSalairesRestants + montantCongés;
+  const total = montantSalairesRestants + montantConges;
 
   return {
     inputs,
     moisRestants,
     tauxJournalier,
-    conges: { jours: conges, montant: montantCongés },
+    conges: { jours: conges, montant: montantConges },
     salairesRestants: { montant: montantSalairesRestants, owesEmployer },
     total
   };
@@ -206,13 +206,13 @@ function calcCDD(inputs) {
  * Départ volontaire calculation
  */
 function calcDepartVolontaire(inputs) {
-  const { salaire, années, mois: moisSup, categorie, conges, motif } = inputs;
-  const totalMois = (années * 12) + (moisSup || 0);
+  const { salaire, annees, mois: moisSup, categorie, conges, motif } = inputs;
+  const totalMois = (annees * 12) + (moisSup || 0);
   const tauxHoraire = salaire / HEURES_MOIS;
   
-  const congesData = calcCongés(salaire, totalMois, conges);
+  const congesData = calcConges(salaire, totalMois, conges);
   
-  let préavis = { montant: 0, label: '0 jours', moisEquiv: 0 };
+  let preavis = { montant: 0, label: '0 jours', moisEquiv: 0 };
   let licenciement = { heures: 0, montant: 0, eligible: false, slabs: [] };
   
   if (motif === 'retraite_legale' || motif === 'retraite_anticipee') {
@@ -228,16 +228,16 @@ function calcDepartVolontaire(inputs) {
   }
 
   if (motif === 'retraite_anticipee') {
-    préavis = getPréavis(categorie, totalMois);
-    préavis.montant = salaire * préavis.moisEquiv;
+    preavis = getPreavis(categorie, totalMois);
+    preavis.montant = salaire * preavis.moisEquiv;
   }
 
-  const total = congesData.montant + (licenciement.montant || 0) + (préavis.montant || 0);
+  const total = congesData.montant + (licenciement.montant || 0) + (preavis.montant || 0);
 
   return {
     inputs: { ...inputs, totalMois, tauxHoraire },
     motif,
-    préavis,
+    preavis,
     licenciement,
     conges: congesData,
     total
@@ -245,7 +245,7 @@ function calcDepartVolontaire(inputs) {
 }
 
 /**
- * CNSS 2024 calculation
+ * CNSS 2025 calculation
  */
 function calcCNSS(inputs) {
   const { salaire, employes } = inputs;
@@ -286,7 +286,7 @@ function calcCNSS(inputs) {
 }
 
 /**
- * IGR 2024 calculation
+ * IGR 2025 calculation
  */
 function calcIGR(inputs) {
   const { salaire, enfants, marie, cnssForce, pension } = inputs;
@@ -302,15 +302,15 @@ function calcIGR(inputs) {
   
   const rniAnnuel = rniMensuel * 12;
 
-  let trancheRate = 0, déductionTranche = 0;
-  if (rniAnnuel <= 30000) { trancheRate = 0; déductionTranche = 0; }
-  else if (rniAnnuel <= 50000) { trancheRate = 10; déductionTranche = 3000; }
-  else if (rniAnnuel <= 60000) { trancheRate = 20; déductionTranche = 8000; }
-  else if (rniAnnuel <= 80000) { trancheRate = 30; déductionTranche = 14000; }
-  else if (rniAnnuel <= 180000) { trancheRate = 34; déductionTranche = 17200; }
-  else { trancheRate = 38; déductionTranche = 24400; }
+  let trancheRate = 0, deductionTranche = 0;
+  if (rniAnnuel <= 30000) { trancheRate = 0; deductionTranche = 0; }
+  else if (rniAnnuel <= 50000) { trancheRate = 10; deductionTranche = 3000; }
+  else if (rniAnnuel <= 60000) { trancheRate = 20; deductionTranche = 8000; }
+  else if (rniAnnuel <= 80000) { trancheRate = 30; deductionTranche = 14000; }
+  else if (rniAnnuel <= 180000) { trancheRate = 34; deductionTranche = 17200; }
+  else { trancheRate = 38; deductionTranche = 24400; }
 
-  let irBrutAnnuel = (rniAnnuel * (trancheRate / 100)) - déductionTranche;
+  let irBrutAnnuel = (rniAnnuel * (trancheRate / 100)) - deductionTranche;
   if (irBrutAnnuel < 0) irBrutAnnuel = 0;
 
   const chargesTotales = Math.min(enfants, 6) + (marie ? 1 : 0);
@@ -327,12 +327,12 @@ function calcIGR(inputs) {
     cnss: totalCNSS,
     pensionCnssEmployee,
     amoEmployee,
-    déductionsSalariales: pensionCnssEmployee + amoEmployee,
+    deductionsSalariales: pensionCnssEmployee + amoEmployee,
     fraisPro,
     rniMensuel,
     rniAnnuel,
     trancheRate,
-    déductionTranche,
+    deductionTranche,
     irBrutAnnuel,
     reductionFamille,
     chargesTotales,
@@ -345,7 +345,7 @@ function calcIGR(inputs) {
 }
 
 /**
- * Reversé payroll calculation: monthly net -> gross
+ * Reverse payroll calculation: monthly net -> gross
  * Uses capped binary search on the existing Moroccan CNSS + IR model
  */
 function calcNetToBrut(inputs) {
@@ -375,7 +375,7 @@ function calcNetToBrut(inputs) {
   }
 
   if (snapshot.salaireNet < netCible) {
-    throw new Error('Impossible de trouver un salaire brut correspondant au net demande.');
+    throw new Error('Impossible de trouver un salaire brut correspondant au net demandé.');
   }
 
   let searchSteps = 0;
@@ -420,7 +420,7 @@ function calcNetToBrut(inputs) {
     rniMensuel: roundMoney(payroll.rniMensuel),
     rniAnnuel: roundMoney(payroll.rniAnnuel),
     trancheRate: payroll.trancheRate,
-    déductionTranche: roundMoney(payroll.déductionTranche),
+    deductionTranche: roundMoney(payroll.deductionTranche),
     reductionFamille: roundMoney(payroll.reductionFamille),
     chargesTotales: payroll.chargesTotales,
     ecartNet: roundMoney(payroll.salaireNet - netCible),
@@ -430,7 +430,7 @@ function calcNetToBrut(inputs) {
       pensionCnss: roundMoney(payroll.pensionCnssEmployee),
       amo: roundMoney(payroll.amoEmployee),
       irMensuel: roundMoney(payroll.irMensuel),
-      pensionComplémentaire: roundMoney(pension),
+      pensionComplementaire: roundMoney(pension),
       salaireNet: roundMoney(payroll.salaireNet)
     },
     cnssBreakdown: cnss.branches,

@@ -92,7 +92,7 @@
       { text: '', size: 11 },
       { text: `${model.totalLabel} : ${model.totalValue}`, bold: true, size: 15 },
       { text: '', size: 11 },
-      { text: 'Postes calcules', bold: true, size: 13 }
+      { text: 'Postes calculés', bold: true, size: 13 }
     ];
 
     model.summaryRows.forEach(([label, value]) => {
@@ -123,7 +123,7 @@
 
     if (model.assumptionRows && model.assumptionRows.length) {
       lines.push({ text: '', size: 11 });
-      lines.push({ text: 'Hypotheses', bold: true, size: 13 });
+      lines.push({ text: 'Hypothèses', bold: true, size: 13 });
 
       model.assumptionRows.forEach((value) => {
         wrapText(`- ${value}`).forEach((line) => {
@@ -133,7 +133,7 @@
     }
 
     lines.push({ text: '', size: 11 });
-    lines.push({ text: 'Reference juridique', bold: true, size: 13 });
+    lines.push({ text: 'Référence juridique', bold: true, size: 13 });
     wrapText(model.legalNote).forEach((line) => {
       lines.push({ text: line, size: 11 });
     });
@@ -267,12 +267,12 @@
             </table>
           ` : ''}
           ${assumptionRows ? `
-            <h2 style="font-size:18px;margin:0 0 12px;">Hypotheses</h2>
+            <h2 style="font-size:18px;margin:0 0 12px;">Hypothèses</h2>
             <ul style="padding-left:18px;color:#5e7287;margin:0 0 22px;">
               ${assumptionRows}
             </ul>
           ` : ''}
-          <p style="margin:0;color:#5e7287;line-height:1.7;"><strong>Reference juridique :</strong> ${esc(model.legalNote)}</p>
+          <p style="margin:0;color:#5e7287;line-height:1.7;"><strong>Référence juridique :</strong> ${esc(model.legalNote)}</p>
           <p style="margin:16px 0 0;color:#5e7287;line-height:1.7;">Simulation indicative uniquement. Ne constitue pas un avis juridique ou fiscal.</p>
         </div>
       </div>
@@ -290,15 +290,20 @@
 
   function buildModuleModel(simulation) {
     const { moduleId, inputs, result } = simulation;
+    const departMotifLabels = {
+      demission: 'Démission',
+      retraite_legale: 'Retraite légale',
+      retraite_anticipee: 'Retraite anticipée (employeur)'
+    };
 
     if (moduleId === 'net2brut') {
-      const familySituation = inputs.marie ? 'Marie(e)' : 'Celibataire';
+      const familySituation = inputs.marie ? 'Marie(e)' : 'Célibataire';
       return {
         title: 'Net vers Brut',
         totalLabel: 'Salaire brut estimé',
         totalValue: fmtMoney(result.salaireBrut),
         summaryRows: [
-          ['Net recu', fmtMoney(result.netCible)],
+          ['Net reçu', fmtMoney(result.netCible)],
           ['Salaire brut estimé', fmtMoney(result.salaireBrut)],
           ['CNSS pension (4,48%)', fmtMoney(result.pensionCnss)],
           ['AMO (2,26%)', fmtMoney(result.amo)],
@@ -309,7 +314,7 @@
           ['Statut', inputs.statut === 'cadre' ? 'Cadre' : 'Non-cadre'],
           ['Situation familiale', familySituation],
           ['Pension complémentaire', fmtMoney(inputs.pension)],
-          ['Enfants a charge', fmtNumber(inputs.enfants)],
+          ['Enfants à charge', fmtNumber(inputs.enfants)],
           ['Frais professionnels', fmtMoney(result.fraisPro)],
           ['Base imposable mensuelle', fmtMoney(result.rniMensuel)],
           ['Tranche IR', `${fmtNumber(result.trancheRate)}%`]
@@ -320,14 +325,14 @@
           ['Moins AMO', fmtMoney(result.amo)],
           ['Moins IR mensuel', fmtMoney(result.irMensuel)],
           ['Moins retenue complémentaire', fmtMoney(result.pension)],
-          ['Egal salaire net', fmtMoney(result.salaireNet)]
+          ['Égale au salaire net', fmtMoney(result.salaireNet)]
         ],
         assumptionRows: [
-          'CNSS pension salariale a 4,48% plafonnée sur une base brute de 6 000 MAD.',
-          'AMO salariale a 2,26% appliquee sur le brut non plafonne.',
-          'Frais professionnels a 20% plafonnes a 2 500 MAD par mois.',
-          'Reduction familiale appliquee selon la situation declaree et le nombre d enfants saisis.',
-          'Cadre et non-cadre suivent ici les memes taux de base CNSS et AMO.'
+          'CNSS pension salariale à 4,48% plafonnée sur une base brute de 6 000 MAD.',
+          'AMO salariale à 2,26% appliquée sur le brut non plafonné.',
+          'Frais professionnels à 20% plafonnés à 2 500 MAD par mois.',
+          'Réduction familiale appliquée selon la situation déclarée et le nombre d’enfants saisis.',
+          'Cadre et non-cadre suivent ici les mêmes taux de base CNSS et AMO.'
         ],
         legalNote: 'Calcul inversé par dichotomie sur le barème marocain CNSS + IGR, avec preuve de recalcul avant -> après retenues.'
       };
@@ -336,20 +341,20 @@
     if (moduleId === 'cdi') {
       return {
         title: 'Rupture CDI',
-        totalLabel: 'Total estime',
+        totalLabel: 'Total estimé',
         totalValue: fmtMoney(result.total),
         summaryRows: [
-          ['Indemnité de préavis', fmtMoney(result.préavis.montant)],
-          ['Indemnité de licenciement', result.licenciement.eligible ? fmtMoney(result.licenciement.montant) : 'Non eligible'],
-          ['Dommages et interets', result.di ? fmtMoney(result.di.montant) : 'Non applicable'],
+          ['Indemnité de préavis', fmtMoney(result.preavis.montant)],
+          ['Indemnité de licenciement', result.licenciement.eligible ? fmtMoney(result.licenciement.montant) : 'Non éligible'],
+          ['Dommages et intérêts', result.di ? fmtMoney(result.di.montant) : 'Non applicable'],
           ['Congés payés', fmtMoney(result.conges.montant)]
         ],
         metaRows: [
           ['Salaire mensuel brut', fmtMoney(inputs.salaire)],
-          ['Anciennete', `${inputs.années} an(s) et ${inputs.mois} mois`],
-          ['Categorie', inputs.categorie === 'cadre' ? 'Cadre' : 'Non-cadre'],
+          ['Ancienneté', `${inputs.annees} an(s) et ${inputs.mois} mois`],
+          ['Catégorie', inputs.categorie === 'cadre' ? 'Cadre' : 'Non-cadre'],
           ['Licenciement abusif', inputs.abusif ? 'Oui' : 'Non'],
-          ['Préavis travaillé', inputs.préavisTravaille ? 'Oui' : 'Non']
+          ['Préavis travaillé', inputs.preavisTravaille ? 'Oui' : 'Non']
         ],
         legalNote: 'Articles 41, 51, 52, 53 et 238 du Code du Travail marocain.'
       };
@@ -358,17 +363,17 @@
     if (moduleId === 'cdd') {
       return {
         title: 'Rupture CDD',
-        totalLabel: 'Total estime a recevoir',
+        totalLabel: 'Total estimé à recevoir',
         totalValue: fmtMoney(result.total),
         summaryRows: [
-          ['Salaires restants', result.salairesRestants.owesEmployer ? 'A la charge du salarie' : fmtMoney(result.salairesRestants.montant)],
+          ['Salaires restants', result.salairesRestants.owesEmployer ? 'À la charge du salarié' : fmtMoney(result.salairesRestants.montant)],
           ['Congés payés', fmtMoney(result.conges.montant)]
         ],
         metaRows: [
           ['Salaire mensuel brut', fmtMoney(inputs.salaire)],
-          ['Duree totale du CDD', `${inputs.totalDuree} mois`],
+          ['Durée totale du CDD', `${inputs.totalDuree} mois`],
           ['Mois déjà travaillés', `${inputs.moisTravailles} mois`],
-          ['Initiative de rupture', inputs.initPar === 'employeur' ? 'Employeur' : 'Employe'],
+          ['Initiative de rupture', inputs.initPar === 'employeur' ? 'Employeur' : 'Employé'],
           ['Congés restants', `${fmtNumber(inputs.conges)} jour(s)`]
         ],
         legalNote: 'Article 33 du Code du Travail marocain.'
@@ -378,18 +383,18 @@
     if (moduleId === 'depart') {
       return {
         title: 'Départ volontaire',
-        totalLabel: 'Total estime',
+        totalLabel: 'Total estimé',
         totalValue: fmtMoney(result.total),
         summaryRows: [
-          ['Préavis', fmtMoney(result.préavis.montant)],
-          ['Indemnité de depart', fmtMoney(result.licenciement.montant)],
+          ['Préavis', fmtMoney(result.preavis.montant)],
+          ['Indemnité de départ', fmtMoney(result.licenciement.montant)],
           ['Congés payés', fmtMoney(result.conges.montant)]
         ],
         metaRows: [
           ['Salaire mensuel brut', fmtMoney(inputs.salaire)],
-          ['Anciennete', `${inputs.années} an(s) et ${inputs.mois} mois`],
-          ['Categorie', inputs.categorie === 'cadre' ? 'Cadre' : 'Non-cadre'],
-          ['Motif', inputs.motif],
+          ['Ancienneté', `${inputs.annees} an(s) et ${inputs.mois} mois`],
+          ['Catégorie', inputs.categorie === 'cadre' ? 'Cadre' : 'Non-cadre'],
+          ['Motif', departMotifLabels[inputs.motif] || inputs.motif],
           ['Congés restants', `${fmtNumber(inputs.conges)} jour(s)`]
         ],
         legalNote: 'Articles 51, 52, 53, 238 et 526 du Code du Travail marocain.'
@@ -408,18 +413,18 @@
         ],
         metaRows: [
           ['Salaire mensuel brut', fmtMoney(inputs.salaire)],
-          ['Nombre de salaries', fmtNumber(inputs.employes)],
+          ['Nombre de salariés', fmtNumber(inputs.employes)],
           ['Allocations familiales', fmtMoney(result.branches.allocations.amountPat)],
           ['AMO', fmtMoney(result.branches.amo.amountEmp + result.branches.amo.amountPat)],
           ['Vieillesse', fmtMoney(result.branches.vieillesse.amountEmp + result.branches.vieillesse.amountPat)]
         ],
-        legalNote: 'Barème CNSS 2024, AMO, vieillesse, allocations familiales et accidents du travail.'
+        legalNote: 'Barème CNSS 2025, AMO, vieillesse, allocations familiales et accidents du travail.'
       };
     }
 
     return {
       title: 'Calcul IGR / IR',
-      totalLabel: 'Salaire net mensuel estime',
+      totalLabel: 'Salaire net mensuel estimé',
       totalValue: fmtMoney(result.salaireNet),
       summaryRows: [
         ['IR mensuel', fmtMoney(result.irMensuel)],
@@ -429,12 +434,12 @@
       ],
       metaRows: [
         ['Salaire mensuel brut', fmtMoney(inputs.salaire)],
-        ['CNSS forcee', fmtMoney(inputs.cnssForce)],
+        ['CNSS forcée', fmtMoney(inputs.cnssForce)],
         ['Pension complémentaire', fmtMoney(inputs.pension)],
-        ['Enfants a charge', fmtNumber(inputs.enfants)],
+        ['Enfants à charge', fmtNumber(inputs.enfants)],
         ['Marie(e)', inputs.marie ? 'Oui' : 'Non']
       ],
-      legalNote: 'Calcul IGR 2024 selon le barème progressif et les charges de famille.'
+      legalNote: 'Calcul IGR 2025 selon le barème progressif et les charges de famille.'
     };
   }
 
@@ -482,7 +487,7 @@
   async function sendPendingSimulation() {
     const simulation = window.HUQUQPRO_STATE.pendingSimulation;
     if (!simulation) {
-      throw new Error('Aucune simulation n\'est prete a etre envoyee.');
+      throw new Error('Aucune simulation n\'est prête à être envoyée.');
     }
 
     const lead = {
@@ -513,11 +518,11 @@
         })
       });
     } catch (error) {
-      throw new Error(`Impossible de joindre ${endpoint}. Verifiez netlify functions:serve --port 9999 et APP_ORIGIN.`);
+      throw new Error(`Impossible de joindre ${endpoint}. Vérifiez netlify functions:serve --port 9999 et APP_ORIGIN.`);
     }
 
     if (!response.ok) {
-      let message = 'Envoi impossible. Reessayez.';
+      let message = 'Envoi impossible. Réessayez.';
       try {
         const errorData = await response.json();
         message = errorData.error || message;
@@ -525,7 +530,7 @@
         if (response.status === 501) {
           message = `Backend local indisponible sur ${endpoint}. Utilisez netlify dev ou netlify functions:serve --port 9999.`;
         } else {
-          message = 'Envoi impossible. Reessayez.';
+          message = 'Envoi impossible. Réessayez.';
         }
       }
       throw new Error(message);

@@ -15,7 +15,7 @@
   const deliveryMessages = {
     net2brut: 'Saisissez le net que vous recevez sur votre compte pour obtenir le brut correspondant, le détail CNSS/AMO, l\'IR mensuel et la preuve du calcul.',
     cdi: 'Renseignez la rupture CDI puis confirmez votre email pour recevoir le détail des indemnités.',
-    cdd: 'Lancez la simulation CDD pour ouvrir l\'envoi privé des salaires restants et conges.',
+    cdd: 'Lancez la simulation CDD pour ouvrir l\'envoi privé des salaires restants et congés.',
     depart: 'Le détail du départ volontaire sera compilé dans un PDF privé envoyé par email.',
     cnss: 'La ventilation CNSS n\'apparaît pas à l\'écran et sera livrée uniquement par email.',
     igr: 'Le détail du barème IGR sera masqué à l\'écran puis envoyé dans une fiche PDF.'
@@ -68,7 +68,7 @@
 
   let net2brutMarie = false;
   let abusif = false;
-  let préavisTravaille = false;
+  let preavisTravaille = false;
   let cddInitPar = 'employeur';
   let igrMarie = false;
 
@@ -137,7 +137,7 @@
     clearChildren(container);
 
     const title = document.createElement('h3');
-    title.textContent = 'Simulation envoyéee';
+    title.textContent = 'Simulation envoyée';
 
     const text = document.createElement('p');
     text.textContent = `Le PDF ${moduleNames[moduleId] || 'HuquqPro'} a été envoyé à ${email}.`;
@@ -209,7 +209,7 @@
   function validateCdi(inputs) {
     const errors = [];
     if (!inputs.salaire || inputs.salaire <= 0) errors.push('Le salaire mensuel brut doit être supérieur à 0.');
-    if (inputs.années < 0) errors.push('Les années d\'anciennete ne peuvent pas être négatives.');
+    if (inputs.annees < 0) errors.push('Les années d\'ancienneté ne peuvent pas être négatives.');
     if (inputs.mois < 0 || inputs.mois > 11) errors.push('Les mois supplémentaires doivent être compris entre 0 et 11.');
     if (inputs.conges < 0) errors.push('Les congés non pris ne peuvent pas être négatifs.');
     return errors;
@@ -220,16 +220,16 @@
     if (!inputs.net || inputs.net <= 0) errors.push('Le salaire net reçu doit être supérieur à 0.');
     if (!inputs.statut) errors.push('Veuillez choisir le statut professionnel.');
     if (inputs.pension < 0) errors.push('La pension complémentaire ne peut pas être négative.');
-    if (inputs.enfants < 0 || inputs.enfants > 6) errors.push('Le nombre d\'enfants a charge doit etre compris entre 0 et 6.');
+    if (inputs.enfants < 0 || inputs.enfants > 6) errors.push('Le nombre d\'enfants à charge doit être compris entre 0 et 6.');
     return errors;
   }
 
   function validateCdd(inputs) {
     const errors = [];
     if (!inputs.salaire || inputs.salaire <= 0) errors.push('Le salaire mensuel brut doit être supérieur à 0.');
-    if (inputs.totalDuree < 1 || inputs.totalDuree > 24) errors.push('La duree totale du CDD doit etre comprise entre 1 et 24 mois.');
-    if (inputs.moisTravailles < 0) errors.push('Les mois travailles ne peuvent pas être négatifs.');
-    if (inputs.moisTravailles > inputs.totalDuree) errors.push('Les mois travailles ne peuvent pas depasser la duree totale du CDD.');
+    if (inputs.totalDuree < 1 || inputs.totalDuree > 24) errors.push('La durée totale du CDD doit être comprise entre 1 et 24 mois.');
+    if (inputs.moisTravailles < 0) errors.push('Les mois travaillés ne peuvent pas être négatifs.');
+    if (inputs.moisTravailles > inputs.totalDuree) errors.push('Les mois travaillés ne peuvent pas dépasser la durée totale du CDD.');
     if (inputs.conges < 0) errors.push('Les congés non pris ne peuvent pas être négatifs.');
     return errors;
   }
@@ -237,7 +237,7 @@
   function validateDepart(inputs) {
     const errors = [];
     if (!inputs.salaire || inputs.salaire <= 0) errors.push('Le salaire mensuel brut doit être supérieur à 0.');
-    if (inputs.années < 0) errors.push('Les années d\'anciennete ne peuvent pas être négatives.');
+    if (inputs.annees < 0) errors.push('Les années d\'ancienneté ne peuvent pas être négatives.');
     if (inputs.mois < 0 || inputs.mois > 11) errors.push('Les mois supplémentaires doivent être compris entre 0 et 11.');
     if (inputs.conges < 0) errors.push('Les congés non pris ne peuvent pas être négatifs.');
     return errors;
@@ -255,19 +255,19 @@
     if (!inputs.salaire || inputs.salaire <= 0) errors.push('Le salaire mensuel brut doit être supérieur à 0.');
     if (inputs.cnssForce < 0) errors.push('La déduction CNSS ne peut pas être négative.');
     if (inputs.pension < 0) errors.push('La pension complémentaire ne peut pas être négative.');
-    if (inputs.enfants < 0 || inputs.enfants > 6) errors.push('Le nombre d\'enfants a charge doit etre compris entre 0 et 6.');
+    if (inputs.enfants < 0 || inputs.enfants > 6) errors.push('Le nombre d\'enfants à charge doit être compris entre 0 et 6.');
     return errors;
   }
 
   function collectCdiInputs() {
     return {
       salaire: parseFloat($('salaire').value) || 0,
-      années: parseInt($('années').value, 10) || 0,
+      annees: parseInt($('annees').value, 10) || 0,
       mois: parseInt($('mois').value, 10) || 0,
       categorie: $('categorie').value,
       conges: parseFloat($('conges').value) || 0,
       abusif,
-      préavisTravaille
+      preavisTravaille
     };
   }
 
@@ -294,7 +294,7 @@
   function collectDepartInputs() {
     return {
       salaire: parseFloat($('depart-salaire').value) || 0,
-      années: parseInt($('depart-années').value, 10) || 0,
+      annees: parseInt($('depart-annees').value, 10) || 0,
       mois: parseInt($('depart-mois').value, 10) || 0,
       categorie: $('depart-categorie').value,
       motif: $('depart-motif').value,
@@ -396,16 +396,16 @@
   }
 
   function updateAncienneteDisplay() {
-    const années = parseInt($('années').value, 10) || 0;
+    const annees = parseInt($('annees').value, 10) || 0;
     const mois = parseInt($('mois').value, 10) || 0;
-    const totalMois = années * 12 + mois;
+    const totalMois = annees * 12 + mois;
     const display = $('anciennete-display');
 
     if (totalMois < 6) {
       display.textContent = `${ancienneteLabel(totalMois)} - moins de 6 mois, pas d'indemnité de licenciement.`;
       display.classList.add('warn');
     } else {
-      display.textContent = `${ancienneteLabel(totalMois)} d'anciennete.`;
+      display.textContent = `${ancienneteLabel(totalMois)} d'ancienneté.`;
       display.classList.remove('warn');
     }
   }
@@ -423,11 +423,11 @@
   function resetCdiForm() {
     $('calc-form').reset();
     abusif = false;
-    préavisTravaille = false;
+    preavisTravaille = false;
     $('abusif-non').classList.add('active');
     $('abusif-oui').classList.remove('active');
-    $('préavis-non').classList.add('active');
-    $('préavis-oui').classList.remove('active');
+    $('preavis-non').classList.add('active');
+    $('preavis-oui').classList.remove('active');
     updateAncienneteDisplay();
     clearErrorsFor('calc-form');
     closeLeadGate();
@@ -467,11 +467,11 @@
   function init() {
     bindToggle($('net2brut-marie-oui'), $('net2brut-marie-non'), () => { net2brutMarie = true; }, () => { net2brutMarie = false; });
     bindToggle($('abusif-oui'), $('abusif-non'), () => { abusif = true; }, () => { abusif = false; });
-    bindToggle($('préavis-oui'), $('préavis-non'), () => { préavisTravaille = true; }, () => { préavisTravaille = false; });
+    bindToggle($('preavis-oui'), $('preavis-non'), () => { preavisTravaille = true; }, () => { preavisTravaille = false; });
     bindToggle($('cdd-init-employe'), $('cdd-init-employeur'), () => { cddInitPar = 'employe'; }, () => { cddInitPar = 'employeur'; });
     bindToggle($('igr-marie-oui'), $('igr-marie-non'), () => { igrMarie = true; }, () => { igrMarie = false; });
 
-    $('années').addEventListener('input', updateAncienneteDisplay);
+    $('annees').addEventListener('input', updateAncienneteDisplay);
     $('mois').addEventListener('input', updateAncienneteDisplay);
     updateAncienneteDisplay();
 
