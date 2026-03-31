@@ -175,10 +175,15 @@
     const pages = paginatePdfLines(lines);
     const objects = [null];
 
-    const catalogId = objects.push(null);
-    const pagesId = objects.push(null);
-    const regularFontId = objects.push('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>');
-    const boldFontId = objects.push('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>');
+    function addObject(content) {
+      objects.push(content);
+      return objects.length - 1;
+    }
+
+    const catalogId = addObject(null);
+    const pagesId = addObject(null);
+    const regularFontId = addObject('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>');
+    const boldFontId = addObject('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>');
     const pageIds = [];
 
     pages.forEach((pageLines) => {
@@ -187,8 +192,8 @@
         return `BT /${fontKey} ${line.size} Tf 1 0 0 1 ${line.x} ${line.y} Tm (${escapePdfText(line.text)}) Tj ET`;
       }).join('\n');
 
-      const contentId = objects.push(`<< /Length ${stream.length} >>\nstream\n${stream}\nendstream`);
-      const pageId = objects.push(
+      const contentId = addObject(`<< /Length ${stream.length} >>\nstream\n${stream}\nendstream`);
+      const pageId = addObject(
         `<< /Type /Page /Parent ${pagesId} 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 ${regularFontId} 0 R /F2 ${boldFontId} 0 R >> >> /Contents ${contentId} 0 R >>`
       );
       pageIds.push(pageId);
