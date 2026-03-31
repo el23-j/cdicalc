@@ -16,8 +16,8 @@
     net2brut: 'Saisissez le net que vous recevez sur votre compte pour obtenir le brut correspondant, le détail CNSS/AMO, l\'IR mensuel et la preuve du calcul.',
     cdi: 'Renseignez la rupture CDI puis confirmez votre email pour recevoir le détail des indemnités.',
     cdd: 'Lancez la simulation CDD pour ouvrir l\'envoi privé des salaires restants et conges.',
-    depart: 'Le detail du depart volontaire sera compilé dans un PDF privé envoye par email.',
-    cnss: 'La ventilation CNSS n\'apparait pas a l\'ecran et sera livrée uniquement par email.',
+    depart: 'Le détail du départ volontaire sera compilé dans un PDF privé envoyé par email.',
+    cnss: 'La ventilation CNSS n\'apparaît pas à l\'écran et sera livrée uniquement par email.',
     igr: 'Le détail du barème IGR sera masqué à l\'écran puis envoyé dans une fiche PDF.'
   };
 
@@ -27,30 +27,38 @@
   });
 
   function getPreviewContent(moduleId, result) {
-    let html = '';
+    let main = '';
+    let hint = '';
     switch (moduleId) {
       case 'net2brut':
-        html = `<p>✅ Brut estimé : <strong>${formatter.format(result.salaireBrut)} MAD</strong></p>`;
+        main = `✅ Brut estimé : <strong>${formatter.format(result.salaireBrut)} MAD</strong>`;
+        hint = `📄 Décomposition complète (CNSS, IR, net fiscal) → par email`;
         break;
       case 'cdi':
-        html = `<p>✅ Indemnité totale (est.) : <strong>${formatter.format(result.total)} MAD</strong></p>`;
+        main = `✅ Indemnité totale estimée : <strong>${formatter.format(result.total)} MAD</strong>`;
+        hint = `📄 Détail (préavis, licenciement, congés) → par email`;
         break;
       case 'cdd':
-        html = `<p>✅ Total estimé à percevoir : <strong>${formatter.format(result.total)} MAD</strong></p>`;
+        main = `✅ Montant dû estimé : <strong>${formatter.format(result.total)} MAD</strong>`;
+        hint = `📄 Détail (salaires restants, congés) → par email`;
         break;
       case 'depart':
-        html = `<p>✅ Total estimé : <strong>${formatter.format(result.total)} MAD</strong></p>`;
+        main = `✅ Indemnité de départ estimée : <strong>${formatter.format(result.total)} MAD</strong>`;
+        hint = `📄 Détail (démission / retraite) → par email`;
         break;
       case 'cnss':
-        html = `<p>✅ Coût global estimé : <strong>${formatter.format(result.coutTotal)} MAD</strong></p>`;
+        main = `✅ Coût employeur estimé : <strong>${formatter.format(result.coutTotal)} MAD/mois</strong>`;
+        hint = `📄 Détail (parts salariale + patronale) → par email`;
         break;
       case 'igr':
-        html = `<p>✅ Salaire net mensuel : <strong>${formatter.format(result.salaireNet)} MAD</strong></p>`;
+        main = `✅ IR mensuel estimé : <strong>${formatter.format(result.irMensuel)} MAD</strong>`;
+        hint = `📄 Détail (RNI, barème, charges famille) → par email`;
         break;
       default:
-        html = `<p>✅ Calcul réussi</p>`;
+        main = `✅ Calcul réussi`;
+        hint = `📄 Le détail vous sera envoyé par email.`;
     }
-    return html + '<p>📄 Le détail complet (décomposition, bases légales) vous sera envoyé par email.</p>';
+    return `<p>${main}</p><p class="result-hint">${hint}</p>`;
   }
 
   window.HUQUQPRO_STATE = window.HUQUQPRO_STATE || {
@@ -96,7 +104,7 @@
   function updateDeliveryContext(moduleId) {
     const nextModule = moduleNames[moduleId] ? moduleId : 'net2brut';
     window.HUQUQPRO_STATE.activeModule = nextModule;
-    $('delivery-copy').textContent = 'Aucun montant n\'est affiche a l\'ecran. Chaque simulation détaillée est livree par email.';
+    $('delivery-copy').textContent = 'Aucun montant n\'est affiché à l\'écran. Chaque simulation détaillée est livrée par email.';
     $('delivery-placeholder-text').textContent = deliveryMessages[nextModule];
   }
 

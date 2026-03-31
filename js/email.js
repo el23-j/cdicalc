@@ -329,7 +329,7 @@
           'Reduction familiale appliquee selon la situation declaree et le nombre d enfants saisis.',
           'Cadre et non-cadre suivent ici les memes taux de base CNSS et AMO.'
         ],
-        legalNote: 'Calcul inversé par dichotomie sur le barème marocain CNSS + IGR, avec preuve de recalcul avant -> apres retenues.'
+        legalNote: 'Calcul inversé par dichotomie sur le barème marocain CNSS + IGR, avec preuve de recalcul avant -> après retenues.'
       };
     }
 
@@ -399,12 +399,12 @@
     if (moduleId === 'cnss') {
       return {
         title: 'Cotisations CNSS',
-        totalLabel: 'Cout global mensuel',
+        totalLabel: 'Coût global mensuel',
         totalValue: fmtMoney(result.coutTotal),
         summaryRows: [
           ['Part salariale', fmtMoney(result.totalEmp)],
           ['Part patronale', fmtMoney(result.totalPat)],
-          ['Cout global', fmtMoney(result.coutTotal)]
+          ['Coût global', fmtMoney(result.coutTotal)]
         ],
         metaRows: [
           ['Salaire mensuel brut', fmtMoney(inputs.salaire)],
