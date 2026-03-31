@@ -481,12 +481,11 @@
     if (isLocalHost && !isNetlifyDev) {
       return `${protocol}//127.0.0.1:9999`;
     }
-
-    return origin;
+    return window.location.origin;
   }
 
   function getSendSimulationEndpoint() {
-    return new URL('/.netlify/functions/send-simulation', `${getFunctionsBaseOrigin()}/`).toString();
+    return '/api/send-simulation';
   }
 
   async function sendPendingSimulation() {

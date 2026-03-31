@@ -195,3 +195,7 @@ export default async (request) => {
     return jsonWithCors(status, { error: message }, origin);
   }
 };
+
+export const config = {
+  runtime: 'edge'
+};

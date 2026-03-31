@@ -1,0 +1,11 @@
+{
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/simulateur-net-brut", "destination": "/app.html" },
+    { "source": "/rupture-cdi", "destination": "/app.html" },
+    { "source": "/rupture-cdd", "destination": "/app.html" },
+    { "source": "/depart-volontaire", "destination": "/app.html" },
+    { "source": "/cotisations-cnss", "destination": "/app.html" },
+    { "source": "/calcul-igr", "destination": "/app.html" }
+  ]
+}
