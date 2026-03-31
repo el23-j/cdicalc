@@ -1,5 +1,4 @@
 {
-  "cleanUrls": true,
   "rewrites": [
     { "source": "/simulateur-net-brut", "destination": "/app.html" },
     { "source": "/rupture-cdi", "destination": "/app.html" },

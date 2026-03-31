@@ -140,7 +140,7 @@ async function saveLead({ email, name, payload }) {
   ).catch(() => null);
 }
 
-export default async (request) => {
+export default async function handler(request) {
   const origin = request.headers.get('origin');
 
   if (request.method === 'OPTIONS') {
