@@ -5,7 +5,7 @@
     net2brut: 'Net vers Brut',
     cdi: 'Rupture CDI',
     cdd: 'Rupture CDD',
-    depart: 'Depart volontaire',
+    depart: 'Départ volontaire',
     cnss: 'Cotisations CNSS',
     igr: 'Calcul IGR / IR'
   };
@@ -246,7 +246,7 @@
         <div style="background:#0f2233;color:#f8fbfd;padding:24px;border-radius:18px 18px 0 0;">
           <div style="font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#9ed7e8;">HuquqPro</div>
           <h1 style="margin:12px 0 0;font-size:24px;">${esc(model.title)}</h1>
-          <p style="margin:8px 0 0;color:#d7e6ef;">Bonjour ${esc(lead.name || 'Utilisateur')}, voici votre simulation detaillee.</p>
+          <p style="margin:8px 0 0;color:#d7e6ef;">Bonjour ${esc(lead.name || 'Utilisateur')}, voici votre simulation détaillée.</p>
         </div>
         <div style="padding:24px;border:1px solid #d7e2ec;border-top:0;border-radius:0 0 18px 18px;background:#ffffff;">
           <div style="padding:16px 18px;background:#eef4fb;border-radius:14px;margin-bottom:22px;">
@@ -295,11 +295,11 @@
       const familySituation = inputs.marie ? 'Marie(e)' : 'Celibataire';
       return {
         title: 'Net vers Brut',
-        totalLabel: 'Salaire brut estime',
+        totalLabel: 'Salaire brut estimé',
         totalValue: fmtMoney(result.salaireBrut),
         summaryRows: [
           ['Net recu', fmtMoney(result.netCible)],
-          ['Salaire brut estime', fmtMoney(result.salaireBrut)],
+          ['Salaire brut estimé', fmtMoney(result.salaireBrut)],
           ['CNSS pension (4,48%)', fmtMoney(result.pensionCnss)],
           ['AMO (2,26%)', fmtMoney(result.amo)],
           ['IR mensuel', fmtMoney(result.irMensuel)],
@@ -342,14 +342,14 @@
           ['Indemnite de preavis', fmtMoney(result.preavis.montant)],
           ['Indemnite de licenciement', result.licenciement.eligible ? fmtMoney(result.licenciement.montant) : 'Non eligible'],
           ['Dommages et interets', result.di ? fmtMoney(result.di.montant) : 'Non applicable'],
-          ['Conges payes', fmtMoney(result.conges.montant)]
+          ['Congés payés', fmtMoney(result.conges.montant)]
         ],
         metaRows: [
           ['Salaire mensuel brut', fmtMoney(inputs.salaire)],
           ['Anciennete', `${inputs.annees} an(s) et ${inputs.mois} mois`],
           ['Categorie', inputs.categorie === 'cadre' ? 'Cadre' : 'Non-cadre'],
           ['Licenciement abusif', inputs.abusif ? 'Oui' : 'Non'],
-          ['Preavis travaille', inputs.preavisTravaille ? 'Oui' : 'Non']
+          ['Préavis travaillé', inputs.preavisTravaille ? 'Oui' : 'Non']
         ],
         legalNote: 'Articles 41, 51, 52, 53 et 238 du Code du Travail marocain.'
       };
@@ -362,14 +362,14 @@
         totalValue: fmtMoney(result.total),
         summaryRows: [
           ['Salaires restants', result.salairesRestants.owesEmployer ? 'A la charge du salarie' : fmtMoney(result.salairesRestants.montant)],
-          ['Conges payes', fmtMoney(result.conges.montant)]
+          ['Congés payés', fmtMoney(result.conges.montant)]
         ],
         metaRows: [
           ['Salaire mensuel brut', fmtMoney(inputs.salaire)],
           ['Duree totale du CDD', `${inputs.totalDuree} mois`],
-          ['Mois deja travailles', `${inputs.moisTravailles} mois`],
+          ['Mois déjà travaillés', `${inputs.moisTravailles} mois`],
           ['Initiative de rupture', inputs.initPar === 'employeur' ? 'Employeur' : 'Employe'],
-          ['Conges restants', `${fmtNumber(inputs.conges)} jour(s)`]
+          ['Congés restants', `${fmtNumber(inputs.conges)} jour(s)`]
         ],
         legalNote: 'Article 33 du Code du Travail marocain.'
       };
@@ -377,20 +377,20 @@
 
     if (moduleId === 'depart') {
       return {
-        title: 'Depart volontaire',
+        title: 'Départ volontaire',
         totalLabel: 'Total estime',
         totalValue: fmtMoney(result.total),
         summaryRows: [
           ['Preavis', fmtMoney(result.preavis.montant)],
           ['Indemnite de depart', fmtMoney(result.licenciement.montant)],
-          ['Conges payes', fmtMoney(result.conges.montant)]
+          ['Congés payés', fmtMoney(result.conges.montant)]
         ],
         metaRows: [
           ['Salaire mensuel brut', fmtMoney(inputs.salaire)],
           ['Anciennete', `${inputs.annees} an(s) et ${inputs.mois} mois`],
           ['Categorie', inputs.categorie === 'cadre' ? 'Cadre' : 'Non-cadre'],
           ['Motif', inputs.motif],
-          ['Conges restants', `${fmtNumber(inputs.conges)} jour(s)`]
+          ['Congés restants', `${fmtNumber(inputs.conges)} jour(s)`]
         ],
         legalNote: 'Articles 51, 52, 53, 238 et 526 du Code du Travail marocain.'
       };
@@ -544,7 +544,7 @@
       const submit = $('lead-submit');
       submit.disabled = true;
       submit.textContent = 'Envoi en cours...';
-      window.HUQUQPRO_UI.setLeadStatus('Preparation du PDF en cours...');
+      window.HUQUQPRO_UI.setLeadStatus('Préparation du PDF en cours...');
 
       try {
         const sent = await sendPendingSimulation();

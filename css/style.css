@@ -142,6 +142,14 @@ button {
   text-wrap: balance;
 }
 
+.update-badge {
+  margin: 0 0 var(--space-sm);
+  color: var(--accent);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
 .site-sub {
   margin: 0;
   max-width: min(42rem, 100%);
@@ -636,6 +644,26 @@ button {
 
 .placeholder-icon {
   font-size: clamp(1.5rem, 1.15rem + 1vw, 2rem);
+}
+
+.result-preview {
+  margin-top: var(--space-sm);
+  padding: clamp(0.75rem, 0.6rem + 0.5vw, 1rem);
+  border-radius: var(--radius-sm);
+  background: rgba(23, 120, 92, 0.08);
+  border: 1px solid rgba(23, 120, 92, 0.2);
+}
+
+.result-preview p {
+  margin: 0;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.result-preview p + p {
+  margin-top: calc(var(--space-2xs) / 2);
+  color: var(--muted);
+  font-size: var(--text-sm);
 }
 
 .email-form-container {

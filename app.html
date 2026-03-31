@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HuquqPro | Calculatrices RH Maroc</title>
+  <title>HuquqPro | Calculatrices RH Maroc — Net/Brut, CDI, CDD, CNSS, IGR</title>
   <meta
     name="description"
-    content="Calculez vos estimations RH marocaines et recevez un PDF detaille par email."
+    content="Simulez vos indemnités de licenciement, cotisations CNSS, IR et salaire brut selon le Code du travail marocain. Résultats envoyés en PDF par email."
   />
   <link rel="stylesheet" href="css/style.css" />
 </head>
@@ -15,7 +15,8 @@
     <div class="shell app-header-inner header-inner">
       <div>
         <div class="header-badge">HuquqPro</div>
-        <h1 class="site-title">Simulations RH marocaines en livraison privee</h1>
+        <h1 class="site-title">Simulations RH marocaines en livraison privée</h1>
+        <p class="update-badge">📅 Barèmes mis à jour — 2025 (CNSS, AMO, IR en vigueur)</p>
         <p class="site-sub">
           Remplissez votre module, lancez la simulation, puis recevez le PDF detaille par email.
         </p>
@@ -29,7 +30,7 @@
       <button class="module-tab active" data-module="net2brut" type="button" aria-pressed="true">Net vers Brut</button>
       <button class="module-tab" data-module="cdi" type="button" aria-pressed="false">Rupture CDI</button>
       <button class="module-tab" data-module="cdd" type="button" aria-pressed="false">Rupture CDD</button>
-      <button class="module-tab" data-module="depart" type="button" aria-pressed="false">Depart volontaire</button>
+      <button class="module-tab" data-module="depart" type="button" aria-pressed="false">Départ volontaire</button>
       <button class="module-tab" data-module="cnss" type="button" aria-pressed="false">Cotisations CNSS</button>
       <button class="module-tab" data-module="igr" type="button" aria-pressed="false">Calcul IGR / IR</button>
     </div>
@@ -49,7 +50,7 @@
                 <div class="field">
                   <label for="net2brut-net">Salaire net recu sur votre compte</label>
                   <div class="input-wrap">
-                    <input type="number" id="net2brut-net" placeholder="8000" min="1" step="0.01" required />
+                    <input type="number" id="net2brut-net" placeholder="Ex : 8 000" min="1" step="0.01" required />
                     <span class="input-unit">MAD</span>
                   </div>
                   <span class="field-hint">Montant net effectivement verse apres CNSS, IR et eventuelle pension complementaire.</span>
@@ -102,7 +103,7 @@
             </fieldset>
 
             <div class="form-actions">
-              <button type="button" class="btn-reset" id="btn-reset-net2brut">Reinitialiser</button>
+              <button type="button" class="btn-reset" id="btn-reset-net2brut">Réinitialiser</button>
               <button type="submit" class="btn-calculate" id="btn-calculate-net2brut">Calculer le brut</button>
             </div>
           </form>
@@ -112,7 +113,7 @@
       <div class="module-panel" id="panel-cdi">
         <section class="card-section module-card-panel">
           <h2 class="panel-label" data-step="1">Rupture CDI</h2>
-          <p class="panel-copy">Renseignez les variables de rupture. Le detail chiffre sera masque a l'ecran et envoye uniquement par email.</p>
+          <p class="panel-copy">Renseignez les variables de rupture. Le detail chiffre sera masqué à l'écran et envoye uniquement par email.</p>
 
           <form id="calc-form" novalidate>
             <fieldset class="field-group">
@@ -131,7 +132,7 @@
                 <div class="field">
                   <label for="salaire">Salaire mensuel brut</label>
                   <div class="input-wrap">
-                    <input type="number" id="salaire" name="salaire" placeholder="12000" min="1" step="0.01" required />
+                    <input type="number" id="salaire" name="salaire" placeholder="Ex : 12 000" min="1" step="0.01" required />
                     <span class="input-unit">MAD</span>
                   </div>
                   <span class="field-hint">Salaire brut hors primes variables</span>
@@ -145,7 +146,7 @@
                 <div class="field">
                   <label for="annees">Annees completes</label>
                   <div class="input-wrap">
-                    <input type="number" id="annees" name="annees" placeholder="0" min="0" max="50" value="0" required />
+                    <input type="number" id="annees" name="annees" placeholder="Ex : 5" min="0" max="50" required />
                     <span class="input-unit">ans</span>
                   </div>
                 </div>
@@ -164,12 +165,12 @@
               <legend class="field-legend">Conditions de depart</legend>
               <div class="field-row two-col">
                 <div class="field">
-                  <label for="conges">Conges payes restants</label>
+                  <label for="conges">Congés payés restants</label>
                   <div class="input-wrap">
                     <input type="number" id="conges" name="conges" placeholder="0" min="0" step="0.5" value="0" />
                     <span class="input-unit">jours</span>
                   </div>
-                  <span class="field-hint">Reliquat de conges non pris</span>
+                  <span class="field-hint">Reliquat de congés non pris</span>
                 </div>
                 <div class="field">
                   <label>Licenciement abusif ?</label>
@@ -183,8 +184,8 @@
 
               <div class="field-row two-col section-gap">
                 <div class="field">
-                  <label>Periode de preavis travaillee ?</label>
-                  <div class="toggle-group" role="group" aria-label="Periode de preavis travaillee">
+                  <label>Periode de préavis travaillée ?</label>
+                  <div class="toggle-group" role="group" aria-label="Periode de préavis travaillée">
                     <button type="button" class="toggle-btn active" id="preavis-non">Oui</button>
                     <button type="button" class="toggle-btn" id="preavis-oui">Non</button>
                   </div>
@@ -195,7 +196,7 @@
             </fieldset>
 
             <div class="form-actions">
-              <button type="button" class="btn-reset" id="btn-reset">Reinitialiser</button>
+              <button type="button" class="btn-reset" id="btn-reset">Réinitialiser</button>
               <button type="submit" class="btn-calculate" id="btn-calculate">Lancer la simulation</button>
             </div>
           </form>
@@ -205,7 +206,7 @@
       <div class="module-panel" id="panel-cdd">
         <section class="card-section module-card-panel">
           <h2 class="panel-label" data-step="1">Rupture CDD</h2>
-          <p class="panel-copy">Obtenez un PDF prive pour estimer les salaires restants et conges en cas de rupture anticipee.</p>
+          <p class="panel-copy">Obtenez un PDF privé pour estimer les salaires restants et conges en cas de rupture anticipee.</p>
 
           <form id="calc-form-cdd" novalidate>
             <fieldset class="field-group">
@@ -214,14 +215,14 @@
                 <div class="field">
                   <label for="cdd-salaire">Salaire mensuel brut</label>
                   <div class="input-wrap">
-                    <input type="number" id="cdd-salaire" placeholder="12000" min="1" step="0.01" required />
+                    <input type="number" id="cdd-salaire" placeholder="Ex : 7 500" min="1" step="0.01" required />
                     <span class="input-unit">MAD</span>
                   </div>
                 </div>
                 <div class="field">
                   <label for="cdd-total-duree">Duree totale du CDD</label>
                   <div class="input-wrap">
-                    <input type="number" id="cdd-total-duree" placeholder="12" min="1" max="24" required />
+                    <input type="number" id="cdd-total-duree" placeholder="Ex : 12" min="1" max="24" required />
                     <span class="input-unit">mois</span>
                   </div>
                   <span class="field-hint">Maximum 24 mois</span>
@@ -229,14 +230,14 @@
               </div>
               <div class="field-row two-col section-gap">
                 <div class="field">
-                  <label for="cdd-mois-travailles">Mois deja travailles</label>
+                  <label for="cdd-mois-travailles">Mois déjà travaillés</label>
                   <div class="input-wrap">
                     <input type="number" id="cdd-mois-travailles" placeholder="6" min="0" required />
                     <span class="input-unit">mois</span>
                   </div>
                 </div>
                 <div class="field">
-                  <label for="cdd-conges">Conges payes restants</label>
+                  <label for="cdd-conges">Congés payés restants</label>
                   <div class="input-wrap">
                     <input type="number" id="cdd-conges" placeholder="0" min="0" step="0.5" value="0" />
                     <span class="input-unit">jours</span>
@@ -249,7 +250,7 @@
               <legend class="field-legend">Conditions de rupture</legend>
               <div class="field-row">
                 <div class="field">
-                  <label>A l'initiative de ?</label>
+                  <label>À l'initiative de ?</label>
                   <div class="toggle-group" role="group" aria-label="Initiative de rupture CDD">
                     <button type="button" class="toggle-btn active" id="cdd-init-employeur">Employeur</button>
                     <button type="button" class="toggle-btn" id="cdd-init-employe">Employe</button>
@@ -259,7 +260,7 @@
             </fieldset>
 
             <div class="form-actions">
-              <button type="button" class="btn-reset" id="btn-reset-cdd">Reinitialiser</button>
+              <button type="button" class="btn-reset" id="btn-reset-cdd">Réinitialiser</button>
               <button type="submit" class="btn-calculate" id="btn-calculate-cdd">Calculer le CDD</button>
             </div>
           </form>
@@ -268,8 +269,8 @@
 
       <div class="module-panel" id="panel-depart">
         <section class="card-section module-card-panel">
-          <h2 class="panel-label" data-step="1">Depart volontaire</h2>
-          <p class="panel-copy">Simulez les effets d'une demission ou d'un depart a la retraite avec livraison privee par email.</p>
+          <h2 class="panel-label" data-step="1">Départ volontaire</h2>
+          <p class="panel-copy">Simulez les effets d'une démission ou d'un depart a la retraite avec livraison privee par email.</p>
 
           <form id="calc-form-depart" novalidate>
             <fieldset class="field-group">
@@ -278,7 +279,7 @@
                 <div class="field">
                   <label for="depart-salaire">Salaire mensuel brut</label>
                   <div class="input-wrap">
-                    <input type="number" id="depart-salaire" placeholder="12000" min="1" step="0.01" required />
+                    <input type="number" id="depart-salaire" placeholder="Ex : 10 000" min="1" step="0.01" required />
                     <span class="input-unit">MAD</span>
                   </div>
                 </div>
@@ -318,15 +319,15 @@
                   <label for="depart-motif">Motif de depart</label>
                   <div class="select-wrap">
                     <select id="depart-motif" required>
-                      <option value="demission">Demission</option>
-                      <option value="retraite_legale">Depart a la retraite legale</option>
+                      <option value="démission">Démission</option>
+                      <option value="retraite_legale">Depart a la retraite légale</option>
                       <option value="retraite_anticipee">Retraite anticipee (employeur)</option>
                     </select>
                     <span class="select-arrow" aria-hidden="true">▼</span>
                   </div>
                 </div>
                 <div class="field">
-                  <label for="depart-conges">Conges payes restants</label>
+                  <label for="depart-conges">Congés payés restants</label>
                   <div class="input-wrap">
                     <input type="number" id="depart-conges" placeholder="0" min="0" step="0.5" value="0" />
                     <span class="input-unit">jours</span>
@@ -336,7 +337,7 @@
             </fieldset>
 
             <div class="form-actions">
-              <button type="button" class="btn-reset" id="btn-reset-depart">Reinitialiser</button>
+              <button type="button" class="btn-reset" id="btn-reset-depart">Réinitialiser</button>
               <button type="submit" class="btn-calculate" id="btn-calculate-depart">Calculer le depart</button>
             </div>
           </form>
@@ -355,7 +356,7 @@
                 <div class="field">
                   <label for="cnss-salaire">Salaire mensuel brut</label>
                   <div class="input-wrap">
-                    <input type="number" id="cnss-salaire" placeholder="12000" min="1" step="0.01" required />
+                    <input type="number" id="cnss-salaire" placeholder="Ex : 9 000" min="1" step="0.01" required />
                     <span class="input-unit">MAD</span>
                   </div>
                 </div>
@@ -370,7 +371,7 @@
             </fieldset>
 
             <div class="form-actions">
-              <button type="button" class="btn-reset" id="btn-reset-cnss">Reinitialiser</button>
+              <button type="button" class="btn-reset" id="btn-reset-cnss">Réinitialiser</button>
               <button type="submit" class="btn-calculate" id="btn-calculate-cnss">Calculer CNSS</button>
             </div>
           </form>
@@ -389,12 +390,12 @@
                 <div class="field">
                   <label for="igr-salaire">Salaire mensuel brut</label>
                   <div class="input-wrap">
-                    <input type="number" id="igr-salaire" placeholder="12000" min="1" step="0.01" required />
+                    <input type="number" id="igr-salaire" placeholder="Ex : 11 000" min="1" step="0.01" required />
                     <span class="input-unit">MAD</span>
                   </div>
                 </div>
                 <div class="field">
-                  <label for="igr-cnss">Deduction CNSS</label>
+                  <label for="igr-cnss">Déduction CNSS</label>
                   <div class="input-wrap">
                     <input type="number" id="igr-cnss" placeholder="0" min="0" step="0.01" value="0" />
                     <span class="input-unit">MAD</span>
@@ -435,7 +436,7 @@
             </fieldset>
 
             <div class="form-actions">
-              <button type="button" class="btn-reset" id="btn-reset-igr">Reinitialiser</button>
+              <button type="button" class="btn-reset" id="btn-reset-igr">Réinitialiser</button>
               <button type="submit" class="btn-calculate" id="btn-calculate-igr">Calculer IGR</button>
             </div>
           </form>
@@ -444,13 +445,13 @@
     </section>
 
     <aside class="card-section delivery-panel" id="delivery-panel" aria-live="polite">
-      <h2 class="panel-label" data-step="2">Livraison privee</h2>
-      <p class="delivery-copy" id="delivery-copy">Aucun montant n'est affiche a l'ecran. Chaque simulation detaillee est livree par email.</p>
+      <h2 class="panel-label" data-step="2">Livraison privée</h2>
+      <p class="delivery-copy" id="delivery-copy">Aucun montant n'est affiché à l'écran. Chaque simulation détaillée est livree par email.</p>
 
       <div class="delivery-benefits">
         <div class="benefit-item">PDF personnalise selon le module actif</div>
         <div class="benefit-item">Base juridique et variables de calcul resumees</div>
-        <div class="benefit-item">Envoi securise via une fonction serverless</div>
+        <div class="benefit-item">Envoi sécurisé via une fonction serverless</div>
       </div>
 
       <div class="results-placeholder" id="delivery-placeholder">
@@ -459,6 +460,8 @@
           Remplissez un formulaire puis lancez la simulation pour ouvrir le parcours email.
         </p>
       </div>
+
+      <div class="result-preview hidden" id="result-preview" aria-live="polite"></div>
 
       <form class="email-form-container hidden" id="lead-form" novalidate>
         <div class="email-form-card" id="lead-gate">
@@ -496,10 +499,11 @@
 
   <footer class="site-footer">
     <div class="shell footer-inner">
-      <p class="footer-legal">
-        Simulation indicative. Ne remplace pas un avis juridique ou comptable professionnel.
-      </p>
-      <a class="footer-link" href="index.html">Retour au site de presentation</a>
+      <div class="footer-legal">
+        <p>© 2025 HuquqPro — Outil indicatif, ne remplace pas un conseil juridique professionnel.</p>
+        <p><a href="mailto:contact@huquqpro.com">contact@huquqpro.com</a></p>
+      </div>
+      <a class="footer-link" href="index.html">Retour au site de présentation</a>
     </div>
   </footer>
 

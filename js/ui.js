@@ -7,19 +7,51 @@
     net2brut: 'Net vers Brut',
     cdi: 'Rupture CDI',
     cdd: 'Rupture CDD',
-    depart: 'Depart volontaire',
+    depart: 'Départ volontaire',
     cnss: 'Cotisations CNSS',
     igr: 'Calcul IGR / IR'
   };
 
   const deliveryMessages = {
-    net2brut: 'Saisissez le net que vous recevez sur votre compte pour obtenir le brut correspondant, le detail CNSS/AMO, l\'IR mensuel et la preuve du calcul.',
-    cdi: 'Renseignez la rupture CDI puis confirmez votre email pour recevoir le detail des indemnites.',
-    cdd: 'Lancez la simulation CDD pour ouvrir l\'envoi prive des salaires restants et conges.',
-    depart: 'Le detail du depart volontaire sera compile dans un PDF prive envoye par email.',
-    cnss: 'La ventilation CNSS n\'apparait pas a l\'ecran et sera livree uniquement par email.',
-    igr: 'Le detail du bareme IGR sera masque a l\'ecran puis envoye dans une fiche PDF.'
+    net2brut: 'Saisissez le net que vous recevez sur votre compte pour obtenir le brut correspondant, le détail CNSS/AMO, l\'IR mensuel et la preuve du calcul.',
+    cdi: 'Renseignez la rupture CDI puis confirmez votre email pour recevoir le détail des indemnités.',
+    cdd: 'Lancez la simulation CDD pour ouvrir l\'envoi privé des salaires restants et conges.',
+    depart: 'Le detail du depart volontaire sera compilé dans un PDF privé envoye par email.',
+    cnss: 'La ventilation CNSS n\'apparait pas a l\'ecran et sera livrée uniquement par email.',
+    igr: 'Le détail du barème IGR sera masqué à l\'écran puis envoyé dans une fiche PDF.'
   };
+
+  const formatter = new Intl.NumberFormat('fr-MA', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+
+  function getPreviewContent(moduleId, result) {
+    let html = '';
+    switch (moduleId) {
+      case 'net2brut':
+        html = `<p>✅ Brut estimé : <strong>${formatter.format(result.salaireBrut)} MAD</strong></p>`;
+        break;
+      case 'cdi':
+        html = `<p>✅ Indemnité totale (est.) : <strong>${formatter.format(result.total)} MAD</strong></p>`;
+        break;
+      case 'cdd':
+        html = `<p>✅ Total estimé à percevoir : <strong>${formatter.format(result.total)} MAD</strong></p>`;
+        break;
+      case 'depart':
+        html = `<p>✅ Total estimé : <strong>${formatter.format(result.total)} MAD</strong></p>`;
+        break;
+      case 'cnss':
+        html = `<p>✅ Coût global estimé : <strong>${formatter.format(result.coutTotal)} MAD</strong></p>`;
+        break;
+      case 'igr':
+        html = `<p>✅ Salaire net mensuel : <strong>${formatter.format(result.salaireNet)} MAD</strong></p>`;
+        break;
+      default:
+        html = `<p>✅ Calcul réussi</p>`;
+    }
+    return html + '<p>📄 Le détail complet (décomposition, bases légales) vous sera envoyé par email.</p>';
+  }
 
   window.HUQUQPRO_STATE = window.HUQUQPRO_STATE || {
     activeModule: 'net2brut',
@@ -64,7 +96,7 @@
   function updateDeliveryContext(moduleId) {
     const nextModule = moduleNames[moduleId] ? moduleId : 'net2brut';
     window.HUQUQPRO_STATE.activeModule = nextModule;
-    $('delivery-copy').textContent = 'Aucun montant n\'est affiche a l\'ecran. Chaque simulation detaillee est livree par email.';
+    $('delivery-copy').textContent = 'Aucun montant n\'est affiche a l\'ecran. Chaque simulation détaillée est livree par email.';
     $('delivery-placeholder-text').textContent = deliveryMessages[nextModule];
   }
 
@@ -84,6 +116,10 @@
     window.HUQUQPRO_STATE.pendingSimulation = null;
     $('lead-form').classList.add('hidden');
     $('delivery-success').classList.add('hidden');
+    
+    const preview = $('result-preview');
+    if (preview) preview.classList.add('hidden');
+    
     $('delivery-placeholder').classList.remove('hidden');
     resetLeadInputs();
   }
@@ -93,10 +129,10 @@
     clearChildren(container);
 
     const title = document.createElement('h3');
-    title.textContent = 'Simulation envoyee';
+    title.textContent = 'Simulation envoyéee';
 
     const text = document.createElement('p');
-    text.textContent = `Le PDF ${moduleNames[moduleId] || 'HuquqPro'} a ete envoye a ${email}.`;
+    text.textContent = `Le PDF ${moduleNames[moduleId] || 'HuquqPro'} a été envoyé à ${email}.`;
 
     container.append(title, text);
     container.classList.remove('hidden');
@@ -119,6 +155,13 @@
     $('lead-module-name').textContent = moduleNames[moduleId] || moduleId;
     $('delivery-placeholder').classList.add('hidden');
     $('delivery-success').classList.add('hidden');
+    
+    const preview = $('result-preview');
+    if (preview) {
+      preview.innerHTML = getPreviewContent(moduleId, result);
+      preview.classList.remove('hidden');
+    }
+    
     $('lead-form').classList.remove('hidden');
     resetLeadInputs();
 
@@ -157,53 +200,53 @@
 
   function validateCdi(inputs) {
     const errors = [];
-    if (!inputs.salaire || inputs.salaire <= 0) errors.push('Le salaire mensuel brut doit etre superieur a 0.');
-    if (inputs.annees < 0) errors.push('Les annees d\'anciennete ne peuvent pas etre negatives.');
-    if (inputs.mois < 0 || inputs.mois > 11) errors.push('Les mois supplementaires doivent etre compris entre 0 et 11.');
-    if (inputs.conges < 0) errors.push('Les conges non pris ne peuvent pas etre negatifs.');
+    if (!inputs.salaire || inputs.salaire <= 0) errors.push('Le salaire mensuel brut doit être supérieur à 0.');
+    if (inputs.annees < 0) errors.push('Les annees d\'anciennete ne peuvent pas être négatives.');
+    if (inputs.mois < 0 || inputs.mois > 11) errors.push('Les mois supplémentaires doivent être compris entre 0 et 11.');
+    if (inputs.conges < 0) errors.push('Les congés non pris ne peuvent pas être négatifs.');
     return errors;
   }
 
   function validateNet2Brut(inputs) {
     const errors = [];
-    if (!inputs.net || inputs.net <= 0) errors.push('Le salaire net recu doit etre superieur a 0.');
+    if (!inputs.net || inputs.net <= 0) errors.push('Le salaire net recu doit être supérieur à 0.');
     if (!inputs.statut) errors.push('Veuillez choisir le statut professionnel.');
-    if (inputs.pension < 0) errors.push('La pension complementaire ne peut pas etre negative.');
+    if (inputs.pension < 0) errors.push('La pension complémentaire ne peut pas être négative.');
     if (inputs.enfants < 0 || inputs.enfants > 6) errors.push('Le nombre d\'enfants a charge doit etre compris entre 0 et 6.');
     return errors;
   }
 
   function validateCdd(inputs) {
     const errors = [];
-    if (!inputs.salaire || inputs.salaire <= 0) errors.push('Le salaire mensuel brut doit etre superieur a 0.');
+    if (!inputs.salaire || inputs.salaire <= 0) errors.push('Le salaire mensuel brut doit être supérieur à 0.');
     if (inputs.totalDuree < 1 || inputs.totalDuree > 24) errors.push('La duree totale du CDD doit etre comprise entre 1 et 24 mois.');
-    if (inputs.moisTravailles < 0) errors.push('Les mois travailles ne peuvent pas etre negatifs.');
+    if (inputs.moisTravailles < 0) errors.push('Les mois travailles ne peuvent pas être négatifs.');
     if (inputs.moisTravailles > inputs.totalDuree) errors.push('Les mois travailles ne peuvent pas depasser la duree totale du CDD.');
-    if (inputs.conges < 0) errors.push('Les conges non pris ne peuvent pas etre negatifs.');
+    if (inputs.conges < 0) errors.push('Les congés non pris ne peuvent pas être négatifs.');
     return errors;
   }
 
   function validateDepart(inputs) {
     const errors = [];
-    if (!inputs.salaire || inputs.salaire <= 0) errors.push('Le salaire mensuel brut doit etre superieur a 0.');
-    if (inputs.annees < 0) errors.push('Les annees d\'anciennete ne peuvent pas etre negatives.');
-    if (inputs.mois < 0 || inputs.mois > 11) errors.push('Les mois supplementaires doivent etre compris entre 0 et 11.');
-    if (inputs.conges < 0) errors.push('Les conges non pris ne peuvent pas etre negatifs.');
+    if (!inputs.salaire || inputs.salaire <= 0) errors.push('Le salaire mensuel brut doit être supérieur à 0.');
+    if (inputs.annees < 0) errors.push('Les annees d\'anciennete ne peuvent pas être négatives.');
+    if (inputs.mois < 0 || inputs.mois > 11) errors.push('Les mois supplémentaires doivent être compris entre 0 et 11.');
+    if (inputs.conges < 0) errors.push('Les congés non pris ne peuvent pas être négatifs.');
     return errors;
   }
 
   function validateCnss(inputs) {
     const errors = [];
-    if (!inputs.salaire || inputs.salaire <= 0) errors.push('Le salaire mensuel brut doit etre superieur a 0.');
-    if (!inputs.employes || inputs.employes < 1) errors.push('Le nombre de salaries doit etre d\'au moins 1.');
+    if (!inputs.salaire || inputs.salaire <= 0) errors.push('Le salaire mensuel brut doit être supérieur à 0.');
+    if (!inputs.employes || inputs.employes < 1) errors.push('Le nombre de salariés doit être d\'au moins 1.');
     return errors;
   }
 
   function validateIgr(inputs) {
     const errors = [];
-    if (!inputs.salaire || inputs.salaire <= 0) errors.push('Le salaire mensuel brut doit etre superieur a 0.');
-    if (inputs.cnssForce < 0) errors.push('La deduction CNSS ne peut pas etre negative.');
-    if (inputs.pension < 0) errors.push('La pension complementaire ne peut pas etre negative.');
+    if (!inputs.salaire || inputs.salaire <= 0) errors.push('Le salaire mensuel brut doit être supérieur à 0.');
+    if (inputs.cnssForce < 0) errors.push('La deduction CNSS ne peut pas être négative.');
+    if (inputs.pension < 0) errors.push('La pension complémentaire ne peut pas être négative.');
     if (inputs.enfants < 0 || inputs.enfants > 6) errors.push('Le nombre d\'enfants a charge doit etre compris entre 0 et 6.');
     return errors;
   }
