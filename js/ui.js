@@ -28,35 +28,28 @@
 
   function getPreviewContent(moduleId, result) {
     let main = '';
-    let hint = '';
+    let hint = '📄 Simulation indicative — résultat complet livré par email.';
     switch (moduleId) {
       case 'net2brut':
         main = `✅ Brut estimé : <strong>${formatter.format(result.salaireBrut)} MAD</strong>`;
-        hint = `📄 Décomposition complète (CNSS, IR, net fiscal) → par email`;
         break;
       case 'cdi':
         main = `✅ Indemnité totale estimée : <strong>${formatter.format(result.total)} MAD</strong>`;
-        hint = `📄 Détail (préavis, licenciement, congés) → par email`;
         break;
       case 'cdd':
         main = `✅ Montant dû estimé : <strong>${formatter.format(result.total)} MAD</strong>`;
-        hint = `📄 Détail (salaires restants, congés) → par email`;
         break;
       case 'depart':
         main = `✅ Indemnité de départ estimée : <strong>${formatter.format(result.total)} MAD</strong>`;
-        hint = `📄 Détail (démission / retraite) → par email`;
         break;
       case 'cnss':
         main = `✅ Coût employeur estimé : <strong>${formatter.format(result.coutTotal)} MAD/mois</strong>`;
-        hint = `📄 Détail (parts salariale + patronale) → par email`;
         break;
       case 'igr':
         main = `✅ IR mensuel estimé : <strong>${formatter.format(result.irMensuel)} MAD</strong>`;
-        hint = `📄 Détail (RNI, barème, charges famille) → par email`;
         break;
       default:
         main = `✅ Calcul réussi`;
-        hint = `📄 Le détail vous sera envoyé par email.`;
     }
     return `<p>${main}</p><p class="result-hint">${hint}</p>`;
   }
@@ -164,6 +157,13 @@
     $('delivery-placeholder').classList.add('hidden');
     $('delivery-success').classList.add('hidden');
     
+    const activeSection = document.querySelector('.module-panel.active > section');
+    const deliveryPanel = $('delivery-panel');
+    if (activeSection && deliveryPanel) {
+      activeSection.appendChild(deliveryPanel);
+      deliveryPanel.classList.add('inline-modal');
+    }
+
     const preview = $('result-preview');
     if (preview) {
       preview.innerHTML = getPreviewContent(moduleId, result);
@@ -375,8 +375,17 @@
       return;
     }
 
-    const result = config.run(inputs);
-    openLeadGate(moduleId, inputs, result);
+    const submitBtn = form.querySelector('.btn-calculate');
+    const originalText = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = 'Calcul en cours...';
+
+    setTimeout(() => {
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalText;
+      const result = config.run(inputs);
+      openLeadGate(moduleId, inputs, result);
+    }, 600);
   }
 
   function bindToggle(buttonYes, buttonNo, onYes, onNo) {
