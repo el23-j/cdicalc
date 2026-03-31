@@ -1,144 +1,105 @@
-# Calculateur d'Indemnités CDI — Droit Marocain
+# HuquqPro — Simulations RH Maroc
 
-Simulation complète des droits lors d'une rupture de CDI, basée sur le Code du Travail marocain (Loi n° 65-99).
+HuquqPro est maintenant organise comme une application statique securisee avec livraison privee par email :
 
-## Couverture légale
+- `index.html` : landing page lead-gen
+- `app.html` : shell des 5 calculateurs
+- `js/calculator.js` : logique de calcul
+- `js/ui.js` : parcours email-only
+- `js/email.js` : generation PDF + preparation de l'email
+- `netlify/functions/send-simulation.mjs` : proxy securise Brevo + Airtable
 
-- **Indemnité de préavis** — Art. 51 + Décret 2-04-469
-- **Indemnité de licenciement** — Art. 52–53
-- **Dommages & intérêts (licenciement abusif)** — Art. 41
-- **Congés payés non pris** — Art. 238
-- **Note fiscale** — Loi de Finances 2023 (exonération IR jusqu'à 1 000 000 MAD)
+## Modules couverts
 
----
+- Rupture CDI
+- Rupture CDD
+- Depart volontaire
+- Cotisations CNSS
+- Calcul IGR / IR
 
-## Structure du projet
+## Architecture
 
-```
-cdicalc/
-├── index.html          # Application principale (structure HTML)
-├── css/
-│   └── style.css       # Styles complets (responsive, print)
-├── js/
-│   ├── calculator.js   # Logique de calcul (pur JS, sans dépendances)
-│   └── ui.js           # Contrôleur DOM & rendu résultats
-└── README.md
-```
+- Frontend statique : HTML, CSS, vanilla JS
+- Proxy securise : Netlify Functions
+- Secrets : variables d'environnement uniquement
+- Delivery : aucun detail chiffre n'est affiche a l'ecran, le PDF part par email
 
-> **100% statique** — aucun backend, aucune dépendance npm, aucune installation requise.
+## Variables d'environnement
 
----
+Copiez `.env.example` puis renseignez les valeurs cote Netlify :
 
-## Lancer localement
-
-### Option 1 — Ouvrir directement
-Double-cliquez sur `index.html` dans votre explorateur de fichiers. L'application s'ouvre dans votre navigateur.
-
-### Option 2 — Serveur local (recommandé pour éviter les problèmes CORS éventuels)
-
-**Avec Python :**
-```bash
-cd cdicalc
-python3 -m http.server 3000
-# → Ouvrir http://localhost:3000
+```dotenv
+BREVO_API_KEY=
+BREVO_SENDER_EMAIL=
+BREVO_SENDER_NAME=HuquqPro
+AIRTABLE_TOKEN=
+AIRTABLE_BASE_ID=
+AIRTABLE_TABLE=HuquqPro
+APP_ORIGIN=http://localhost:8888
+UPSTASH_REDIS_REST_URL=
+UPSTASH_REDIS_REST_TOKEN=
 ```
 
-**Avec Node.js / npx :**
-```bash
-cd cdicalc
-npx serve .
-# → Ouvrir l'URL affichée
-```
+Important : les anciennes cles exposees dans `js/config.js` doivent etre considerees comme compromises et doivent etre regenerees chez Brevo et Airtable.
 
-**Avec VS Code :**
-Installez l'extension *Live Server*, clic droit sur `index.html` → *Open with Live Server*.
+## Lancer en local
 
----
+Pour tester aussi la fonction serverless, utilisez Netlify Dev :
 
-## Déployer en production
-
-### Netlify (recommandé — gratuit)
-1. Créez un compte sur [netlify.com](https://netlify.com)
-2. Depuis le dashboard : **Add new site → Deploy manually**
-3. Glissez-déposez le dossier `cdicalc/` sur la zone de dépôt
-4. Votre site est en ligne en moins d'une minute
-
-**Ou via Netlify CLI :**
 ```bash
 npm install -g netlify-cli
-cd cdicalc
-netlify deploy --prod --dir .
+cd /home/el23j/cdicalc
+netlify dev
 ```
 
-### Vercel
+Puis ouvrez l'URL locale fournie par Netlify, en general `http://localhost:8888`.
+
+### Contournement si `netlify dev` plante sur Edge Functions
+
+Certaines versions de Netlify CLI plantent pendant la preparation de l'environnement Edge Functions. Dans ce cas, utilisez deux terminaux :
+
 ```bash
-npm install -g vercel
-cd cdicalc
-vercel --prod
+# terminal 1
+cd /home/el23j/cdicalc
+python3 -m http.server 4174
 ```
 
-### GitHub Pages
-1. Créez un dépôt GitHub (public ou privé avec GitHub Pro)
-2. Poussez le contenu du dossier `cdicalc/` à la racine du dépôt
-3. Allez dans **Settings → Pages → Source → Deploy from branch → main**
-4. Votre site est disponible à `https://votre-pseudo.github.io/nom-du-repo`
-
-### Hébergement classique (cPanel, FTP, etc.)
-Uploadez le contenu du dossier `cdicalc/` dans le répertoire `public_html/` ou équivalent.
-
----
-
-## Formules implémentées
-
-### Taux horaire
-```
-taux_horaire = salaire_mensuel_brut / 191
+```bash
+# terminal 2
+cd /home/el23j/cdicalc
+set -a
+source .env
+set +a
+npx netlify-cli functions:serve --port 9999
 ```
 
-### Indemnité de préavis
-| Catégorie | < 1 an | 1–5 ans | > 5 ans |
-|-----------|--------|---------|---------|
-| Non-cadre | 8 jours | 1 mois | 2 mois |
-| Cadre     | 1 mois  | 2 mois | 3 mois |
+Puis ouvrez `http://127.0.0.1:4174/app.html?module=cdi`.
 
-```
-montant_preavis = salaire * mois_preavis
-```
+Important : dans ce mode, reglez `APP_ORIGIN` sur l'origine exacte du navigateur, par exemple `http://127.0.0.1:4174`.
+L'application cible alors explicitement `http://127.0.0.1:9999/.netlify/functions/send-simulation`.
 
-### Indemnité de licenciement (tranches cumulatives)
-| Tranche d'ancienneté | Taux annuel |
-|----------------------|-------------|
-| 0 – 5 ans            | 96 h/an     |
-| 6 – 10 ans           | 144 h/an    |
-| 11 – 15 ans          | 192 h/an    |
-| > 15 ans             | 240 h/an    |
+## Deploiement Netlify
 
-```
-heures_totales = Σ (années_tranche × taux_tranche)
-montant = heures_totales × taux_horaire
-```
-Éligibilité minimum : 6 mois d'ancienneté.
+1. Connectez ou importez le dossier sur Netlify.
+2. Definissez toutes les variables d'environnement du fichier `.env.example`.
+3. Verifiez que `netlify.toml` est pris en compte.
+4. Deployez en production.
 
-### Dommages & intérêts (licenciement abusif)
-```
-mois_DI = min(ancienneté_en_années × 1.5, 36)
-montant_DI = mois_DI × salaire_mensuel
-```
+## Points de securite inclus
 
-### Congés payés
-```
-salaire_journalier = salaire_mensuel / 26
-montant_conges = jours_non_pris × salaire_journalier
-```
+- suppression des secrets cote client
+- fonction serverless same-origin
+- sanitization de l'email et du nom
+- honeypot anti-bot
+- rate limiting compatible Upstash Redis
+- CSP stricte via `netlify.toml`
+- suppression des handlers inline dans l'application
 
----
+## Limites actuelles
 
-## Avertissement légal
+- la generation du PDF est faite dans le navigateur puis envoyee a la fonction
+- pour une signature plus forte cote conformite, une phase 2 peut deplacer la generation PDF cote serveur
 
-Cette application est fournie **à titre indicatif uniquement** et ne constitue pas un conseil juridique. En cas de litige, consultez un avocat spécialisé en droit du travail ou contactez l'Inspection du Travail marocaine.
+## Avertissement
 
-**Références légales :**
-- Code du Travail marocain — Loi n° 65-99
-- Décret n° 2-04-469 (délais de préavis)
-- Articles 41, 51, 52, 53, 238
-- Loi de Finances 2023 (exonération fiscale)
+Simulation indicative uniquement. Ne remplace pas un avis juridique, social ou fiscal professionnel.

@@ -7,6 +7,10 @@
 
 const HEURES_MOIS = 191; // Standard working hours per month (Art. 184)
 
+function roundMoney(value) {
+  return +(Number(value) || 0).toFixed(2);
+}
+
 /**
  * Notice period (préavis) duration in calendar days
  * Décret 2-04-469
@@ -271,10 +275,13 @@ function calcCNSS(inputs) {
       vieillesse: { base: baseVieillesse, cap: 6000, rateEmp: 4.48, ratePat: 8.98, amountEmp: vEmp, amountPat: vPat },
       accidents: { base: salaire, rateEmp: 0, ratePat: 0.67, amountEmp: accEmp, amountPat: accPat }
     },
+    amoEmployee: amoEmp,
+    pensionCnssEmployee: vEmp,
     totalEmp,
     totalPat,
     netAvantIR: salaire - totalEmp,
-    coutTotal: (salaire + totalPat) * employes
+    coutTotal: (salaire + totalPat) * employes,
+    total: (salaire + totalPat) * employes
   };
 }
 
@@ -283,12 +290,10 @@ function calcCNSS(inputs) {
  */
 function calcIGR(inputs) {
   const { salaire, enfants, marie, cnssForce, pension } = inputs;
-  
-  let totalCNSS = cnssForce;
-  if (cnssForce === 0) {
-    const cnssObj = calcCNSS({ salaire, employes: 1 });
-    totalCNSS = cnssObj.totalEmp;
-  }
+  const cnssAuto = calcCNSS({ salaire, employes: 1 });
+  const pensionCnssEmployee = cnssAuto.pensionCnssEmployee;
+  const amoEmployee = cnssAuto.amoEmployee;
+  const totalCNSS = cnssForce === 0 ? cnssAuto.totalEmp : cnssForce;
 
   const fraisPro = Math.min(salaire * 0.20, 2500);
   let rniMensuel = salaire - totalCNSS - fraisPro;
@@ -320,6 +325,9 @@ function calcIGR(inputs) {
   return {
     inputs,
     cnss: totalCNSS,
+    pensionCnssEmployee,
+    amoEmployee,
+    deductionsSalariales: pensionCnssEmployee + amoEmployee,
     fraisPro,
     rniMensuel,
     rniAnnuel,
@@ -331,9 +339,112 @@ function calcIGR(inputs) {
     irNetAnnuel,
     irMensuel,
     salaireNet,
-    tauxEffectif
+    tauxEffectif,
+    total: salaireNet
+  };
+}
+
+/**
+ * Reverse payroll calculation: monthly net -> gross
+ * Uses capped binary search on the existing Moroccan CNSS + IR model
+ */
+function calcNetToBrut(inputs) {
+  const netCible = Math.max(0, Number(inputs.net) || 0);
+  const statut = inputs.statut === 'cadre' ? 'cadre' : 'non-cadre';
+  const pension = Math.max(0, Number(inputs.pension) || 0);
+  const enfants = Math.max(0, Math.min(6, Number(inputs.enfants) || 0));
+  const marie = Boolean(inputs.marie);
+
+  const payrollInputs = {
+    pension,
+    enfants,
+    marie,
+    cnssForce: 0
+  };
+
+  let low = Math.max(netCible, 0);
+  let high = Math.max(1000, netCible + pension + 1000);
+  let expansionSteps = 0;
+  let snapshot = calcIGR({ salaire: high, ...payrollInputs });
+
+  while (snapshot.salaireNet < netCible && expansionSteps < 30) {
+    low = high;
+    high = Math.max(high * 1.35, high + 1000);
+    snapshot = calcIGR({ salaire: high, ...payrollInputs });
+    expansionSteps += 1;
+  }
+
+  if (snapshot.salaireNet < netCible) {
+    throw new Error('Impossible de trouver un salaire brut correspondant au net demande.');
+  }
+
+  let searchSteps = 0;
+  while (searchSteps < 70) {
+    const mid = (low + high) / 2;
+    const attempt = calcIGR({ salaire: mid, ...payrollInputs });
+
+    if (attempt.salaireNet >= netCible) {
+      high = mid;
+      snapshot = attempt;
+    } else {
+      low = mid;
+    }
+
+    searchSteps += 1;
+  }
+
+  let salaireBrut = Math.ceil(high * 100) / 100;
+  let payroll = calcIGR({ salaire: salaireBrut, ...payrollInputs });
+  let roundingSteps = 0;
+
+  while (payroll.salaireNet < netCible && roundingSteps < 25) {
+    salaireBrut = roundMoney(salaireBrut + 0.01);
+    payroll = calcIGR({ salaire: salaireBrut, ...payrollInputs });
+    roundingSteps += 1;
+  }
+
+  const cnss = calcCNSS({ salaire: salaireBrut, employes: 1 });
+
+  return {
+    inputs: { ...inputs, net: netCible, statut, pension, enfants, marie },
+    netCible: roundMoney(netCible),
+    salaireBrut: roundMoney(salaireBrut),
+    salaireNet: roundMoney(payroll.salaireNet),
+    cnss: roundMoney(payroll.cnss),
+    pensionCnss: roundMoney(payroll.pensionCnssEmployee),
+    amo: roundMoney(payroll.amoEmployee),
+    totalRetenuesSalariales: roundMoney(payroll.pensionCnssEmployee + payroll.amoEmployee),
+    irMensuel: roundMoney(payroll.irMensuel),
+    pension: roundMoney(pension),
+    fraisPro: roundMoney(payroll.fraisPro),
+    rniMensuel: roundMoney(payroll.rniMensuel),
+    rniAnnuel: roundMoney(payroll.rniAnnuel),
+    trancheRate: payroll.trancheRate,
+    deductionTranche: roundMoney(payroll.deductionTranche),
+    reductionFamille: roundMoney(payroll.reductionFamille),
+    chargesTotales: payroll.chargesTotales,
+    ecartNet: roundMoney(payroll.salaireNet - netCible),
+    iterations: expansionSteps + searchSteps + roundingSteps,
+    proof: {
+      salaireBrut: roundMoney(salaireBrut),
+      pensionCnss: roundMoney(payroll.pensionCnssEmployee),
+      amo: roundMoney(payroll.amoEmployee),
+      irMensuel: roundMoney(payroll.irMensuel),
+      pensionComplementaire: roundMoney(pension),
+      salaireNet: roundMoney(payroll.salaireNet)
+    },
+    cnssBreakdown: cnss.branches,
+    payroll,
+    total: roundMoney(salaireBrut)
   };
 }
 
 // Expose to global scope (no module bundler needed)
-window.CDICalculator = { calculate, calcCDD, calcDepartVolontaire, calcCNSS, calcIGR };
+window.CDICalculator = {
+  calculate,
+  calcCDD,
+  calcDepartVolontaire,
+  calcCNSS,
+  calcIGR,
+  calcNetToBrut
+};

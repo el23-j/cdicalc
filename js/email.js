@@ -1,330 +1,572 @@
-/* ─────────────────────────────────────────────────────────────────────────
-   email.js — HuquqPro PDF Generation & Email Integration
-   ───────────────────────────────────────────────────────────────────────────── */
+(function () {
+  'use strict';
 
-function getSuffix(moduleId) {
-  return moduleId === 'cdi' ? '' : '-' + moduleId;
-}
-
-const moduleNames = {
-  cdi: "Rupture CDI",
-  cdd: "Rupture CDD",
-  depart: "Départ Volontaire",
-  cnss: "Cotisations CNSS",
-  igr: "Calcul IGR / IR"
-};
-
-/**
- * Parses the DOM to extract simulation data, formats an HTML email, and generates a PDF.
- * Returns { base64Pdf, htmlEmail, totalAmount, modName }
- */
-function extractDataAndGeneratePDF(moduleId, userName, userEmail) {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-  const suffix = getSuffix(moduleId);
-  
-  // Extract DOM data
-  const totalEl = document.querySelector(`#summary-grid${suffix} .card-total .card-value`);
-  const totalAmount = totalEl ? totalEl.innerText.trim() : '0,00 MAD';
-  
-  const breakdownCards = document.querySelectorAll(`#breakdown-cards${suffix} .breakdown-card`);
-  const tableRows = [];
-  let htmlTableRows = "";
-  
-  breakdownCards.forEach(card => {
-    const title = card.querySelector('.bc-title') ? card.querySelector('.bc-title').innerText : '';
-    const ref = card.querySelector('.bc-ref') ? card.querySelector('.bc-ref').innerText : '';
-    const amount = card.querySelector('.bc-amount') ? card.querySelector('.bc-amount').innerText : '';
-    tableRows.push([title, ref, amount]);
-    htmlTableRows += `<tr>
-      <td style="padding: 10px; border-bottom: 1px solid #e2e8f0;"><strong>${title}</strong><br><small style="color:#64748b">${ref}</small></td>
-      <td style="padding: 10px; border-bottom: 1px solid #e2e8f0; font-family: monospace;">${amount}</td>
-    </tr>`;
-  });
-  
-  const paramsEl = document.querySelectorAll(`#formula-grid${suffix} .formula-item`);
-  const paramRows = [];
-  let htmlParamRows = "";
-  paramsEl.forEach(item => {
-    const key = item.querySelector('.fi-key') ? item.querySelector('.fi-key').innerText : '';
-    const val = item.querySelector('.fi-val') ? item.querySelector('.fi-val').innerText : '';
-    paramRows.push(`${key}: ${val}`);
-    htmlParamRows += `<li><strong>${key}:</strong> ${val}</li>`;
-  });
-
-  const modName = moduleNames[moduleId] || moduleId;
-  const dateStr = new Date().toLocaleDateString('fr-MA', { year: 'numeric', month: 'long', day: 'numeric' });
-
-  // Draw PDF
-  doc.setFillColor(26, 26, 26);
-  doc.rect(0, 0, 210, 30, 'F');
-  
-  doc.setTextColor(255, 255, 255);
-  doc.setFontSize(18);
-  doc.setFont('helvetica', 'bold');
-  doc.text('HuquqPro - Code du Travail', 15, 15);
-  doc.setFontSize(12);
-  doc.setFont('helvetica', 'normal');
-  doc.text(`Simulation : ${modName} | Date : ${dateStr}`, 15, 24);
-  
-  doc.setTextColor(50, 50, 50);
-  doc.text(`Prépare pour : ${userName || "Utilisateur"} — ${userEmail}`, 15, 40);
-  
-  doc.setFontSize(16);
-  doc.setFont('helvetica', 'bold');
-  doc.text(`TOTAL ESTIME : ${totalAmount}`, 15, 50);
-  
-  doc.setFontSize(12);
-  doc.text('Détail des calculs', 15, 62);
-  
-  if (tableRows.length > 0) {
-    doc.autoTable({
-      startY: 65,
-      head: [['Rubrique', 'Référence', 'Montant']],
-      body: tableRows,
-      theme: 'grid',
-      headStyles: { fillColor: [59, 130, 246] },
-      styles: { font: 'helvetica', fontSize: 10 }
-    });
-  }
-  
-  let finalY = (doc.lastAutoTable ? doc.lastAutoTable.finalY : 65) + 10;
-  
-  if (paramRows.length > 0) {
-    doc.setFontSize(12);
-    doc.setFont('helvetica', 'bold');
-    doc.text('Base de calcul', 15, finalY);
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(10);
-    paramRows.forEach((p, i) => {
-      doc.text(p, 15, finalY + 6 + (i * 6));
-    });
-    finalY = finalY + 6 + (paramRows.length * 6) + 10;
-  }
-  
-  // Footer
-  doc.setFontSize(9);
-  doc.setTextColor(100, 100, 100);
-  doc.text('Avertissement juridique', 15, finalY);
-  doc.text('Simulation indicative uniquement. Ne constitue pas un avis juridique.', 15, finalY + 5);
-  doc.text('Code du Travail marocaine - Loi n 65-99', 15, finalY + 10);
-  
-  // Set Metadata
-  const dateIso = new Date().toISOString().split('T')[0];
-  doc.setProperties({
-    title: `Simulation HuquqPro - ${modName}`,
-    author: 'HuquqPro'
-  });
-  
-  const fullBase64 = doc.output('datauristring');
-  const base64Clean = fullBase64.split('base64,')[1];
-  const pdfFilename = `HuquqPro_${moduleId}_${dateIso}.pdf`;
-
-  // Create HTML Email
-  const htmlEmail = `
-  <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
-    <div style="background: #1a1a1a; color: white; padding: 20px; text-align: center;">
-      <h1 style="margin: 0; font-size: 24px;">HuquqPro — حقوق العمل</h1>
-      <p style="margin: 5px 0 0 0; font-size: 14px; opacity: 0.8;">Simulation : ${modName} | Date : ${dateStr}</p>
-    </div>
-    <div style="padding: 20px; border: 1px solid #eee;">
-      <p>Bonjour ${userName || "Utilisateur"},</p>
-      <p>Veuillez trouver ci-joint votre simulation détaillée au format PDF.</p>
-      
-      <div style="background: #eff6ff; border-left: 4px solid #3b82f6; padding: 15px; margin: 20px 0;">
-        <h2 style="margin: 0; font-size: 20px; color: #1e3a8a;">TOTAL ESTIMÉ : ${totalAmount}</h2>
-      </div>
-      
-      <h3>Détail des calculs</h3>
-      <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; text-align: left;">
-        <thead>
-          <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0;">
-            <th style="padding: 10px;">Rubrique</th>
-            <th style="padding: 10px;">Montant</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${htmlTableRows}
-        </tbody>
-      </table>
-      
-      <h3>Base de calcul</h3>
-      <ul style="color: #64748b; font-size: 14px;">
-        ${htmlParamRows}
-      </ul>
-      
-      <p style="font-size: 12px; color: #94a3b8; margin-top: 30px; border-top: 1px solid #e2e8f0; padding-top: 20px;">
-        ⚖ Avertissement légal : Simulation indicative uniquement. Ne constitue pas un avis juridique. Code du Travail — Loi n° 65-99.
-      </p>
-    </div>
-  </div>`;
-
-  // Remove totally clean numeric total for Airtable
-  const rawTotal = parseFloat(totalAmount.replace(/[^\d,\.]/g, '').replace(',', '.'));
-
-  return { base64Pdf: base64Clean, htmlEmail, totalAmount: (isNaN(rawTotal) ? 0 : rawTotal), modName, pdfFilename };
-}
-
-/**
- * Send Email via Brevo API
- */
-async function sendEmailViaBrevo(base64Pdf, htmlEmail, userEmail, userName, modName, pdfFilename) {
-  const payload = {
-    sender: { name: HUQUQPRO_CONFIG.brevo.senderName, email: HUQUQPRO_CONFIG.brevo.senderEmail },
-    to: [{ email: userEmail, name: userName || "Utilisateur" }],
-    subject: `Votre simulation HuquqPro — ${modName}`,
-    htmlContent: htmlEmail,
-    attachment: [{
-      name: pdfFilename,
-      content: base64Pdf
-    }]
+  const moduleNames = {
+    net2brut: 'Net vers Brut',
+    cdi: 'Rupture CDI',
+    cdd: 'Rupture CDD',
+    depart: 'Depart volontaire',
+    cnss: 'Cotisations CNSS',
+    igr: 'Calcul IGR / IR'
   };
 
-  const response = await fetch("https://api.brevo.com/v3/smtp/email", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "api-key": HUQUQPRO_CONFIG.brevo.apiKey
-    },
-    body: JSON.stringify(payload)
+  const moneyFormatter = new Intl.NumberFormat('fr-MA', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
   });
 
-  if (!response.ok) {
-    const err = await response.json();
-    throw new Error(err.message || 'Erreur API Brevo');
-  }
-  return response.json();
-}
+  const numberFormatter = new Intl.NumberFormat('fr-MA', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2
+  });
 
-/**
- * Save Lead to Airtable
- */
-async function saveLeadToAirtable(userEmail, userName, moduleName, totalAmount) {
-  const url = `https://api.airtable.com/v0/${HUQUQPRO_CONFIG.airtable.baseId}/${encodeURIComponent(HUQUQPRO_CONFIG.airtable.table)}`;
-  
-  const payload = {
-    records: [{
-      fields: {
-        "Nom": userName || "—",
-        "Email": userEmail,
-        "Module": moduleName,
-        "Total (MAD)": totalAmount,
-        "Date": new Date().toISOString().split('T')[0],
-        "Statut": "Nouveau"
+  const $ = (id) => document.getElementById(id);
+
+  function esc(value = '') {
+    return String(value).replace(/[&<>"']/g, (char) => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    }[char]));
+  }
+
+  function fmtMoney(value) {
+    return `${moneyFormatter.format(Number(value) || 0)} MAD`;
+  }
+
+  function fmtNumber(value) {
+    return numberFormatter.format(Number(value) || 0);
+  }
+
+  function asciiText(value = '') {
+    return String(value)
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^\x20-\x7E]/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  function escapePdfText(value = '') {
+    return asciiText(value)
+      .replace(/\\/g, '\\\\')
+      .replace(/\(/g, '\\(')
+      .replace(/\)/g, '\\)');
+  }
+
+  function wrapText(text, maxLength = 82) {
+    const words = asciiText(text).split(' ');
+    const lines = [];
+    let current = '';
+
+    words.forEach((word) => {
+      const candidate = current ? `${current} ${word}` : word;
+      if (candidate.length > maxLength && current) {
+        lines.push(current);
+        current = word;
+      } else {
+        current = candidate;
       }
-    }]
-  };
+    });
 
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Authorization": `Bearer ${HUQUQPRO_CONFIG.airtable.token}`,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(payload)
-  });
+    if (current) {
+      lines.push(current);
+    }
 
-  if (!response.ok) {
-    const err = await response.json();
-    throw new Error(err.error?.message || 'Erreur API Airtable');
-  }
-}
-
-/**
- * Handle Full Flow Submit
- */
-async function handleEmailSubmit(moduleId) {
-  const suffix = getSuffix(moduleId);
-  const nameInput = document.getElementById(`email-name${suffix}`);
-  const emailInput = document.getElementById(`email-addr${suffix}`);
-  const statusEl = document.getElementById(`email-status${suffix}`);
-  const formWrap = document.getElementById(`email-form${suffix}`);
-  const btnSend = document.querySelector(`.ef-send[data-module="${moduleId}"]`);
-  const formCard = document.querySelector(`#email-form${suffix} .email-form-card`);
-
-  const userName = nameInput.value.trim();
-  const userEmail = emailInput.value.trim();
-
-  // Basic validation
-  if (!userEmail || !userEmail.includes('@')) {
-    statusEl.innerHTML = `❌ Erreur : Adresse email invalide.`;
-    statusEl.className = 'ef-status error';
-    return;
+    return lines.length ? lines : [''];
   }
 
-  // Loading State
-  btnSend.disabled = true;
-  btnSend.innerHTML = "⏳ Génération du PDF...";
-  statusEl.innerHTML = "";
-  statusEl.className = 'ef-status';
+  function createPdfLines(model, lead) {
+    const dateText = new Date().toLocaleDateString('fr-MA', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
 
-  try {
-    // 1. Generate PDF & Email content
-    const { base64Pdf, htmlEmail, totalAmount, modName, pdfFilename } = extractDataAndGeneratePDF(moduleId, userName, userEmail);
-    
-    // 2. Sending state
-    btnSend.innerHTML = "📤 Envoi en cours...";
+    const lines = [
+      { text: `HuquqPro - ${model.title}`, bold: true, size: 18 },
+      { text: `Date : ${dateText}`, size: 11 },
+      { text: `Destinataire : ${lead.name || 'Utilisateur'} - ${lead.email}`, size: 11 },
+      { text: '', size: 11 },
+      { text: `${model.totalLabel} : ${model.totalValue}`, bold: true, size: 15 },
+      { text: '', size: 11 },
+      { text: 'Postes calcules', bold: true, size: 13 }
+    ];
 
-    // 3. Parallel API Calls
-    const pEmail = sendEmailViaBrevo(base64Pdf, htmlEmail, userEmail, userName, modName, pdfFilename);
-    const pAirtable = saveLeadToAirtable(userEmail, userName, modName, totalAmount)
-      .catch(err => console.warn("Airtable warning non-bloquant :", err)); // Swallow Airtable error as requested
+    model.summaryRows.forEach(([label, value]) => {
+      wrapText(`${label} : ${value}`).forEach((line) => {
+        lines.push({ text: line, size: 11 });
+      });
+    });
 
-    await pEmail;
-    await pAirtable;
+    lines.push({ text: '', size: 11 });
+    lines.push({ text: 'Base de calcul', bold: true, size: 13 });
 
-    // 4. Success State
-    formCard.innerHTML = `<div class="ef-success">
-      <div class="ef-icon">✅</div>
-      <p>Email envoyé avec succès !</p>
-      <span>Veuillez vérifier votre boîte de réception (et vos indésirables).</span>
-    </div>`;
+    model.metaRows.forEach(([label, value]) => {
+      wrapText(`${label} : ${value}`).forEach((line) => {
+        lines.push({ text: line, size: 11 });
+      });
+    });
 
-  } catch (error) {
-    console.error("Email Error:", error);
-    statusEl.innerHTML = `❌ Erreur : ${error.message}. Réessayez.`;
-    statusEl.className = 'ef-status error';
-    btnSend.disabled = false;
-    btnSend.innerHTML = "Envoyer la simulation";
+    if (model.proofRows && model.proofRows.length) {
+      lines.push({ text: '', size: 11 });
+      lines.push({ text: 'Preuve de calcul', bold: true, size: 13 });
+
+      model.proofRows.forEach(([label, value]) => {
+        wrapText(`${label} : ${value}`).forEach((line) => {
+          lines.push({ text: line, size: 11 });
+        });
+      });
+    }
+
+    if (model.assumptionRows && model.assumptionRows.length) {
+      lines.push({ text: '', size: 11 });
+      lines.push({ text: 'Hypotheses', bold: true, size: 13 });
+
+      model.assumptionRows.forEach((value) => {
+        wrapText(`- ${value}`).forEach((line) => {
+          lines.push({ text: line, size: 11 });
+        });
+      });
+    }
+
+    lines.push({ text: '', size: 11 });
+    lines.push({ text: 'Reference juridique', bold: true, size: 13 });
+    wrapText(model.legalNote).forEach((line) => {
+      lines.push({ text: line, size: 11 });
+    });
+
+    lines.push({ text: '', size: 11 });
+    wrapText('Simulation indicative uniquement. Ne constitue pas un avis juridique ou fiscal.').forEach((line) => {
+      lines.push({ text: line, size: 10 });
+    });
+
+    return lines;
   }
-}
 
-/**
- * Initialization (Bind events)
- */
-function initEmailSystem() {
-  // Bind main email trigger buttons to reveal the form
-  document.querySelectorAll('.btn-email').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      const moduleId = btn.getAttribute('data-module');
-      const suffix = getSuffix(moduleId);
-      const formWrap = document.getElementById(`email-form${suffix}`);
-      formWrap.classList.remove('hidden');
-      setTimeout(() => formWrap.classList.add('visible'), 10);
+  function paginatePdfLines(lines) {
+    const pages = [];
+    let page = [];
+    let y = 790;
+
+    lines.forEach((line) => {
+      const lineHeight = line.size >= 15 ? 24 : line.bold ? 20 : 16;
+      if (y - lineHeight < 52) {
+        pages.push(page);
+        page = [];
+        y = 790;
+      }
+
+      page.push({ ...line, x: 52, y });
+      y -= lineHeight;
     });
-  });
 
-  // Bind cancel buttons
-  document.querySelectorAll('.ef-cancel').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      const moduleId = btn.getAttribute('data-module');
-      const suffix = getSuffix(moduleId);
-      const formWrap = document.getElementById(`email-form${suffix}`);
-      formWrap.classList.remove('visible');
-      setTimeout(() => formWrap.classList.add('hidden'), 300); // Wait for transition
+    if (page.length) {
+      pages.push(page);
+    }
+
+    return pages;
+  }
+
+  function buildPdfBase64(model, lead) {
+    const lines = createPdfLines(model, lead);
+    const pages = paginatePdfLines(lines);
+    const objects = [null];
+
+    const catalogId = objects.push(null);
+    const pagesId = objects.push(null);
+    const regularFontId = objects.push('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>');
+    const boldFontId = objects.push('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>');
+    const pageIds = [];
+
+    pages.forEach((pageLines) => {
+      const stream = pageLines.map((line) => {
+        const fontKey = line.bold ? 'F2' : 'F1';
+        return `BT /${fontKey} ${line.size} Tf 1 0 0 1 ${line.x} ${line.y} Tm (${escapePdfText(line.text)}) Tj ET`;
+      }).join('\n');
+
+      const contentId = objects.push(`<< /Length ${stream.length} >>\nstream\n${stream}\nendstream`);
+      const pageId = objects.push(
+        `<< /Type /Page /Parent ${pagesId} 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 ${regularFontId} 0 R /F2 ${boldFontId} 0 R >> >> /Contents ${contentId} 0 R >>`
+      );
+      pageIds.push(pageId);
     });
-  });
 
-  // Bind Send Buttons
-  document.querySelectorAll('.ef-send').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      const moduleId = btn.getAttribute('data-module');
-      handleEmailSubmit(moduleId);
+    objects[pagesId] = `<< /Type /Pages /Kids [${pageIds.map((id) => `${id} 0 R`).join(' ')}] /Count ${pageIds.length} >>`;
+    objects[catalogId] = `<< /Type /Catalog /Pages ${pagesId} 0 R >>`;
+
+    let pdf = '%PDF-1.4\n';
+    const offsets = [0];
+
+    for (let index = 1; index < objects.length; index += 1) {
+      offsets[index] = pdf.length;
+      pdf += `${index} 0 obj\n${objects[index]}\nendobj\n`;
+    }
+
+    const xrefOffset = pdf.length;
+    pdf += `xref\n0 ${objects.length}\n`;
+    pdf += '0000000000 65535 f \n';
+
+    for (let index = 1; index < objects.length; index += 1) {
+      pdf += `${String(offsets[index]).padStart(10, '0')} 00000 n \n`;
+    }
+
+    pdf += `trailer\n<< /Size ${objects.length} /Root ${catalogId} 0 R >>\nstartxref\n${xrefOffset}\n%%EOF`;
+
+    return btoa(pdf);
+  }
+
+  function buildHtmlEmail(model, lead) {
+    const summaryRows = model.summaryRows.map(([label, value]) => `
+      <tr>
+        <td style="padding:10px 0;border-bottom:1px solid #e1e8ef;"><strong>${esc(label)}</strong></td>
+        <td style="padding:10px 0;border-bottom:1px solid #e1e8ef;text-align:right;">${esc(value)}</td>
+      </tr>
+    `).join('');
+
+    const metaRows = model.metaRows.map(([label, value]) => `
+      <li style="margin-bottom:8px;"><strong>${esc(label)} :</strong> ${esc(value)}</li>
+    `).join('');
+
+    const proofRows = (model.proofRows || []).map(([label, value]) => `
+      <tr>
+        <td style="padding:10px 0;border-bottom:1px solid #e1e8ef;"><strong>${esc(label)}</strong></td>
+        <td style="padding:10px 0;border-bottom:1px solid #e1e8ef;text-align:right;">${esc(value)}</td>
+      </tr>
+    `).join('');
+
+    const assumptionRows = (model.assumptionRows || []).map((value) => `
+      <li style="margin-bottom:8px;">${esc(value)}</li>
+    `).join('');
+
+    return `
+      <div style="font-family:Arial,sans-serif;max-width:640px;margin:0 auto;color:#16283b;">
+        <div style="background:#0f2233;color:#f8fbfd;padding:24px;border-radius:18px 18px 0 0;">
+          <div style="font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#9ed7e8;">HuquqPro</div>
+          <h1 style="margin:12px 0 0;font-size:24px;">${esc(model.title)}</h1>
+          <p style="margin:8px 0 0;color:#d7e6ef;">Bonjour ${esc(lead.name || 'Utilisateur')}, voici votre simulation detaillee.</p>
+        </div>
+        <div style="padding:24px;border:1px solid #d7e2ec;border-top:0;border-radius:0 0 18px 18px;background:#ffffff;">
+          <div style="padding:16px 18px;background:#eef4fb;border-radius:14px;margin-bottom:22px;">
+            <strong style="display:block;font-size:14px;color:#0f6a86;">${esc(model.totalLabel)}</strong>
+            <span style="display:block;font-size:24px;margin-top:6px;">${esc(model.totalValue)}</span>
+          </div>
+          <table style="width:100%;border-collapse:collapse;margin-bottom:22px;">
+            ${summaryRows}
+          </table>
+          <h2 style="font-size:18px;margin:0 0 12px;">Base de calcul</h2>
+          <ul style="padding-left:18px;color:#5e7287;margin:0 0 22px;">
+            ${metaRows}
+          </ul>
+          ${proofRows ? `
+            <h2 style="font-size:18px;margin:0 0 12px;">Preuve de calcul</h2>
+            <table style="width:100%;border-collapse:collapse;margin-bottom:22px;">
+              ${proofRows}
+            </table>
+          ` : ''}
+          ${assumptionRows ? `
+            <h2 style="font-size:18px;margin:0 0 12px;">Hypotheses</h2>
+            <ul style="padding-left:18px;color:#5e7287;margin:0 0 22px;">
+              ${assumptionRows}
+            </ul>
+          ` : ''}
+          <p style="margin:0;color:#5e7287;line-height:1.7;"><strong>Reference juridique :</strong> ${esc(model.legalNote)}</p>
+          <p style="margin:16px 0 0;color:#5e7287;line-height:1.7;">Simulation indicative uniquement. Ne constitue pas un avis juridique ou fiscal.</p>
+        </div>
+      </div>
+    `;
+  }
+
+  function buildPdfAndEmailFromModel(model, lead, moduleId) {
+    const dateIso = new Date().toISOString().split('T')[0];
+    return {
+      base64Pdf: buildPdfBase64(model, lead),
+      htmlEmail: buildHtmlEmail(model, lead),
+      pdfFilename: `HuquqPro_${moduleId}_${dateIso}.pdf`
+    };
+  }
+
+  function buildModuleModel(simulation) {
+    const { moduleId, inputs, result } = simulation;
+
+    if (moduleId === 'net2brut') {
+      const familySituation = inputs.marie ? 'Marie(e)' : 'Celibataire';
+      return {
+        title: 'Net vers Brut',
+        totalLabel: 'Salaire brut estime',
+        totalValue: fmtMoney(result.salaireBrut),
+        summaryRows: [
+          ['Net recu', fmtMoney(result.netCible)],
+          ['Salaire brut estime', fmtMoney(result.salaireBrut)],
+          ['CNSS pension (4,48%)', fmtMoney(result.pensionCnss)],
+          ['AMO (2,26%)', fmtMoney(result.amo)],
+          ['IR mensuel', fmtMoney(result.irMensuel)],
+          ['Net obtenu', fmtMoney(result.salaireNet)]
+        ],
+        metaRows: [
+          ['Statut', inputs.statut === 'cadre' ? 'Cadre' : 'Non-cadre'],
+          ['Situation familiale', familySituation],
+          ['Pension complementaire', fmtMoney(inputs.pension)],
+          ['Enfants a charge', fmtNumber(inputs.enfants)],
+          ['Frais professionnels', fmtMoney(result.fraisPro)],
+          ['Base imposable mensuelle', fmtMoney(result.rniMensuel)],
+          ['Tranche IR', `${fmtNumber(result.trancheRate)}%`]
+        ],
+        proofRows: [
+          ['Salaire brut', fmtMoney(result.salaireBrut)],
+          ['Moins CNSS pension', fmtMoney(result.pensionCnss)],
+          ['Moins AMO', fmtMoney(result.amo)],
+          ['Moins IR mensuel', fmtMoney(result.irMensuel)],
+          ['Moins retenue complementaire', fmtMoney(result.pension)],
+          ['Egal salaire net', fmtMoney(result.salaireNet)]
+        ],
+        assumptionRows: [
+          'CNSS pension salariale a 4,48% plafonnee sur une base brute de 6 000 MAD.',
+          'AMO salariale a 2,26% appliquee sur le brut non plafonne.',
+          'Frais professionnels a 20% plafonnes a 2 500 MAD par mois.',
+          'Reduction familiale appliquee selon la situation declaree et le nombre d enfants saisis.',
+          'Cadre et non-cadre suivent ici les memes taux de base CNSS et AMO.'
+        ],
+        legalNote: 'Calcul inverse par dichotomie sur le bareme marocain CNSS + IGR, avec preuve de recalcul avant -> apres retenues.'
+      };
+    }
+
+    if (moduleId === 'cdi') {
+      return {
+        title: 'Rupture CDI',
+        totalLabel: 'Total estime',
+        totalValue: fmtMoney(result.total),
+        summaryRows: [
+          ['Indemnite de preavis', fmtMoney(result.preavis.montant)],
+          ['Indemnite de licenciement', result.licenciement.eligible ? fmtMoney(result.licenciement.montant) : 'Non eligible'],
+          ['Dommages et interets', result.di ? fmtMoney(result.di.montant) : 'Non applicable'],
+          ['Conges payes', fmtMoney(result.conges.montant)]
+        ],
+        metaRows: [
+          ['Salaire mensuel brut', fmtMoney(inputs.salaire)],
+          ['Anciennete', `${inputs.annees} an(s) et ${inputs.mois} mois`],
+          ['Categorie', inputs.categorie === 'cadre' ? 'Cadre' : 'Non-cadre'],
+          ['Licenciement abusif', inputs.abusif ? 'Oui' : 'Non'],
+          ['Preavis travaille', inputs.preavisTravaille ? 'Oui' : 'Non']
+        ],
+        legalNote: 'Articles 41, 51, 52, 53 et 238 du Code du Travail marocain.'
+      };
+    }
+
+    if (moduleId === 'cdd') {
+      return {
+        title: 'Rupture CDD',
+        totalLabel: 'Total estime a recevoir',
+        totalValue: fmtMoney(result.total),
+        summaryRows: [
+          ['Salaires restants', result.salairesRestants.owesEmployer ? 'A la charge du salarie' : fmtMoney(result.salairesRestants.montant)],
+          ['Conges payes', fmtMoney(result.conges.montant)]
+        ],
+        metaRows: [
+          ['Salaire mensuel brut', fmtMoney(inputs.salaire)],
+          ['Duree totale du CDD', `${inputs.totalDuree} mois`],
+          ['Mois deja travailles', `${inputs.moisTravailles} mois`],
+          ['Initiative de rupture', inputs.initPar === 'employeur' ? 'Employeur' : 'Employe'],
+          ['Conges restants', `${fmtNumber(inputs.conges)} jour(s)`]
+        ],
+        legalNote: 'Article 33 du Code du Travail marocain.'
+      };
+    }
+
+    if (moduleId === 'depart') {
+      return {
+        title: 'Depart volontaire',
+        totalLabel: 'Total estime',
+        totalValue: fmtMoney(result.total),
+        summaryRows: [
+          ['Preavis', fmtMoney(result.preavis.montant)],
+          ['Indemnite de depart', fmtMoney(result.licenciement.montant)],
+          ['Conges payes', fmtMoney(result.conges.montant)]
+        ],
+        metaRows: [
+          ['Salaire mensuel brut', fmtMoney(inputs.salaire)],
+          ['Anciennete', `${inputs.annees} an(s) et ${inputs.mois} mois`],
+          ['Categorie', inputs.categorie === 'cadre' ? 'Cadre' : 'Non-cadre'],
+          ['Motif', inputs.motif],
+          ['Conges restants', `${fmtNumber(inputs.conges)} jour(s)`]
+        ],
+        legalNote: 'Articles 51, 52, 53, 238 et 526 du Code du Travail marocain.'
+      };
+    }
+
+    if (moduleId === 'cnss') {
+      return {
+        title: 'Cotisations CNSS',
+        totalLabel: 'Cout global mensuel',
+        totalValue: fmtMoney(result.coutTotal),
+        summaryRows: [
+          ['Part salariale', fmtMoney(result.totalEmp)],
+          ['Part patronale', fmtMoney(result.totalPat)],
+          ['Cout global', fmtMoney(result.coutTotal)]
+        ],
+        metaRows: [
+          ['Salaire mensuel brut', fmtMoney(inputs.salaire)],
+          ['Nombre de salaries', fmtNumber(inputs.employes)],
+          ['Allocations familiales', fmtMoney(result.branches.allocations.amountPat)],
+          ['AMO', fmtMoney(result.branches.amo.amountEmp + result.branches.amo.amountPat)],
+          ['Vieillesse', fmtMoney(result.branches.vieillesse.amountEmp + result.branches.vieillesse.amountPat)]
+        ],
+        legalNote: 'Bareme CNSS 2024, AMO, vieillesse, allocations familiales et accidents du travail.'
+      };
+    }
+
+    return {
+      title: 'Calcul IGR / IR',
+      totalLabel: 'Salaire net mensuel estime',
+      totalValue: fmtMoney(result.salaireNet),
+      summaryRows: [
+        ['IR mensuel', fmtMoney(result.irMensuel)],
+        ['Taux effectif', `${fmtNumber(result.tauxEffectif)}%`],
+        ['CNSS retenue', fmtMoney(result.cnss)],
+        ['Salaire net', fmtMoney(result.salaireNet)]
+      ],
+      metaRows: [
+        ['Salaire mensuel brut', fmtMoney(inputs.salaire)],
+        ['CNSS forcee', fmtMoney(inputs.cnssForce)],
+        ['Pension complementaire', fmtMoney(inputs.pension)],
+        ['Enfants a charge', fmtNumber(inputs.enfants)],
+        ['Marie(e)', inputs.marie ? 'Oui' : 'Non']
+      ],
+      legalNote: 'Calcul IGR 2024 selon le bareme progressif et les charges de famille.'
+    };
+  }
+
+  function validateLead(lead) {
+    if (!lead.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(lead.email)) {
+      throw new Error('Veuillez saisir une adresse email valide.');
+    }
+  }
+
+  function getConfiguredFunctionsOrigin() {
+    const queryOrigin = new URLSearchParams(window.location.search).get('functions_origin');
+    if (queryOrigin) {
+      return queryOrigin;
+    }
+
+    const meta = document.querySelector('meta[name="huquqpro-functions-origin"]');
+    if (meta && meta.content) {
+      return meta.content.trim();
+    }
+
+    return '';
+  }
+
+  function getFunctionsBaseOrigin() {
+    const configuredOrigin = getConfiguredFunctionsOrigin();
+    if (configuredOrigin) {
+      return configuredOrigin.replace(/\/+$/, '');
+    }
+
+    const { origin, protocol, hostname, port } = window.location;
+    const isLocalHost = /^(localhost|127\.0\.0\.1|0\.0\.0\.0|\[::1\]|::1)$/.test(hostname);
+    const isNetlifyDev = port === '8888';
+
+    if (isLocalHost && !isNetlifyDev) {
+      return `${protocol}//127.0.0.1:9999`;
+    }
+
+    return origin;
+  }
+
+  function getSendSimulationEndpoint() {
+    return new URL('/.netlify/functions/send-simulation', `${getFunctionsBaseOrigin()}/`).toString();
+  }
+
+  async function sendPendingSimulation() {
+    const simulation = window.HUQUQPRO_STATE.pendingSimulation;
+    if (!simulation) {
+      throw new Error('Aucune simulation n\'est prete a etre envoyee.');
+    }
+
+    const lead = {
+      name: $('lead-name').value.trim(),
+      email: $('lead-email').value.trim(),
+      website: $('lead-website').value.trim()
+    };
+
+    validateLead(lead);
+
+    const model = buildModuleModel(simulation);
+    const documentPayload = buildPdfAndEmailFromModel(model, lead, simulation.moduleId);
+
+    const endpoint = getSendSimulationEndpoint();
+    let response;
+
+    try {
+      response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          moduleId: simulation.moduleId,
+          lead,
+          simulation,
+          document: documentPayload
+        })
+      });
+    } catch (error) {
+      throw new Error(`Impossible de joindre ${endpoint}. Verifiez netlify functions:serve --port 9999 et APP_ORIGIN.`);
+    }
+
+    if (!response.ok) {
+      let message = 'Envoi impossible. Reessayez.';
+      try {
+        const errorData = await response.json();
+        message = errorData.error || message;
+      } catch (error) {
+        if (response.status === 501) {
+          message = `Backend local indisponible sur ${endpoint}. Utilisez netlify dev ou netlify functions:serve --port 9999.`;
+        } else {
+          message = 'Envoi impossible. Reessayez.';
+        }
+      }
+      throw new Error(message);
+    }
+
+    return {
+      lead,
+      moduleId: simulation.moduleId
+    };
+  }
+
+  function init() {
+    $('lead-form').addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const submit = $('lead-submit');
+      submit.disabled = true;
+      submit.textContent = 'Envoi en cours...';
+      window.HUQUQPRO_UI.setLeadStatus('Preparation du PDF en cours...');
+
+      try {
+        const sent = await sendPendingSimulation();
+        window.HUQUQPRO_UI.showDeliverySuccess(sent.lead.email, sent.moduleId);
+      } catch (error) {
+        submit.disabled = false;
+        submit.textContent = 'Recevoir mon PDF';
+        window.HUQUQPRO_UI.setLeadStatus(error.message, 'error');
+      }
     });
-  });
-}
 
-document.addEventListener('DOMContentLoaded', initEmailSystem);
+    $('lead-cancel').addEventListener('click', () => {
+      window.HUQUQPRO_UI.closeLeadGate();
+    });
+
+    document.addEventListener('huquqpro:modulechange', () => {
+      window.HUQUQPRO_UI.setLeadStatus('');
+      $('lead-name').value = '';
+      $('lead-email').value = '';
+      $('lead-website').value = '';
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
+})();
