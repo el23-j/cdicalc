@@ -9,6 +9,19 @@
     content="Simulez vos indemnités de licenciement, cotisations CNSS, IR et salaire brut selon le Code du travail marocain. Résultats envoyés en PDF par email."
   />
   <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .result-preview {
+      background: rgba(255,255,255,0.05);
+      border-left: 3px solid var(--accent, #c9a96e);
+      padding: 1rem 1.2rem;
+      border-radius: 6px;
+      margin-bottom: 1.2rem;
+    }
+    .result-preview p { margin: 0.3rem 0; }
+    .result-preview strong { color: var(--accent, #c9a96e); font-size: 1.1rem; }
+    .result-hint { font-size: 0.85rem; opacity: 0.7; }
+    .hidden { display: none !important; }
+  </style>
 </head>
 <body class="app-page">
   <header class="site-header app-header">
@@ -91,7 +104,7 @@
                   <span class="field-hint">La réduction familiale IR est plafonnée à 6 enfants.</span>
                 </div>
                 <div class="field">
-                  <label>Marie(e) ?</label>
+                  <label>Marié(e) ?</label>
                   <div class="toggle-group" role="group" aria-label="Situation matrimoniale net vers brut">
                     <button type="button" class="toggle-btn active" id="net2brut-marie-non">Non</button>
                     <button type="button" class="toggle-btn" id="net2brut-marie-oui">Oui</button>
@@ -425,7 +438,7 @@
                   </div>
                 </div>
                 <div class="field">
-                  <label>Marie(e) ?</label>
+                  <label>Marié(e) ?</label>
                   <div class="toggle-group" role="group" aria-label="Situation matrimoniale">
                     <button type="button" class="toggle-btn active" id="igr-marie-non">Non</button>
                     <button type="button" class="toggle-btn" id="igr-marie-oui">Oui</button>
@@ -499,13 +512,32 @@
   <footer style="text-align:center;padding:2rem 1rem;font-size:0.8rem;opacity:0.6;">
     <p>© 2025 HuquqPro — Outil indicatif basé sur le Code du Travail marocain.</p>
     <p>Ne remplace pas un conseil juridique ou comptable professionnel.</p>
-    <p>Contact : <a href="mailto:contact@huquqpro.com">contact@huquqpro.com</a></p>
+    <p>Contact : <a href="mailto:contact@huquqpro.com" style="color:inherit;text-decoration:underline;">contact@huquqpro.com</a></p>
+    <p style="margin-top:0.6rem;">📅 Barèmes CNSS, AMO et IR mis à jour — 2025</p>
   </footer>
 
+  <script>
+    // Inject partial result preview before the email form opens
+    // Called by calculator.js via window.showResultPreview(module, value, label, hint)
+    window.showResultPreview = function(module, value, label, hint) {
+      const preview = document.getElementById('result-preview');
+      const placeholder = document.getElementById('delivery-placeholder');
+      if (!preview) return;
+      preview.innerHTML =
+        '<p>✅ ' + label + ' : <strong>' + value + ' MAD</strong></p>' +
+        '<p class="result-hint">📄 ' + hint + ' → par email</p>';
+      preview.classList.remove('hidden');
+      if (placeholder) placeholder.classList.add('hidden');
+    };
+
+    window.hideResultPreview = function() {
+      const preview = document.getElementById('result-preview');
+      const placeholder = document.getElementById('delivery-placeholder');
+      if (preview) preview.classList.add('hidden');
+      if (placeholder) placeholder.classList.remove('hidden');
+    };
+  </script>
   <script src="js/calculator.js" defer></script>
   <script src="js/router.js" defer></script>
-  <script src="js/ui.js" defer></script>
-  <script src="js/email.js" defer></script>
-  <p style="text-align:center;font-size:0.8rem;opacity:0.7;margin:1rem 0;"> 📅 Barèmes CNSS, AMO et IR mis à jour — 2025 </p>
 </body>
 </html>
