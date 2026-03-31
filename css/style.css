@@ -408,6 +408,7 @@ button {
 .field-row {
   display: grid;
   gap: var(--space-sm);
+  align-items: start;
 }
 
 .two-col {
