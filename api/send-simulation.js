@@ -70,7 +70,7 @@ async function enforceRateLimit(key) {
     },
     body: JSON.stringify([
       ['INCR', `lead:${key}`],
-      ['EXPIRE', `lead:${key}`, 3600]
+      ['EXPIRE', `lead:${key}`, 600]
     ])
   });
 
@@ -80,7 +80,7 @@ async function enforceRateLimit(key) {
 
   const data = await response.json();
   const count = Number(Array.isArray(data) && data[0] ? data[0].result : 0);
-  if (count > 5) {
+  if (count > 3) {
     throw new Error('Trop de demandes, réessayez plus tard');
   }
 }
@@ -191,8 +191,9 @@ export default async function handler(request) {
     return jsonWithCors(200, { ok: true }, origin);
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Erreur serveur';
-    const status = /Trop de demandes/.test(message) ? 429 : /Email invalide/.test(message) ? 400 : 500;
-    return jsonWithCors(status, { error: message }, origin);
+    const status = /Trop de demandes/.test(message) ? 429 : /Email invalide/.test(message) ? 400 : (/Document invalide/.test(message) || /Module invalide/.test(message) ? 400 : 500);
+    const safeMessage = status >= 500 ? "Une erreur est survenue lors de l'envoi. Veuillez réessayer." : message;
+    return jsonWithCors(status, { error: safeMessage }, origin);
   }
 };
 

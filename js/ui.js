@@ -130,10 +130,10 @@
     clearChildren(container);
 
     const title = document.createElement('h3');
-    title.textContent = 'Simulation envoyée';
+    title.innerHTML = '✅ PDF envoyé !';
 
     const text = document.createElement('p');
-    text.textContent = `Le PDF ${moduleNames[moduleId] || 'HuquqPro'} a été envoyé à ${email}.`;
+    text.textContent = `Vérifiez votre boîte email.`;
 
     container.append(title, text);
     container.classList.remove('hidden');
@@ -487,9 +487,22 @@
     Object.keys(MODULES).forEach((moduleId) => {
       const config = MODULES[moduleId];
       const form = $(config.formId);
-      form.addEventListener('submit', (event) => {
-        event.preventDefault();
-        handleModuleSubmit(moduleId);
+      if (form) {
+        form.addEventListener('submit', (event) => {
+          event.preventDefault();
+          handleModuleSubmit(moduleId);
+        });
+      }
+    });
+
+    // Share button listener
+    document.querySelectorAll('.btn-share').forEach(btn => {
+      btn.addEventListener('click', () => {
+        navigator.clipboard.writeText(window.location.href).then(() => {
+          const originalText = btn.textContent;
+          btn.textContent = '✅ Lien copié !';
+          setTimeout(() => { btn.textContent = originalText; }, 2000);
+        });
       });
     });
 

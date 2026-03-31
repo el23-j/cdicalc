@@ -1,10 +1,30 @@
 {
-  "rewrites": [
-    { "source": "/simulateur-net-brut", "destination": "/app.html" },
-    { "source": "/rupture-cdi", "destination": "/app.html" },
-    { "source": "/rupture-cdd", "destination": "/app.html" },
-    { "source": "/depart-volontaire", "destination": "/app.html" },
-    { "source": "/cotisations-cnss", "destination": "/app.html" },
-    { "source": "/calcul-igr", "destination": "/app.html" }
+  "cleanUrls": true,
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; object-src 'none'"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        }
+      ]
+    }
   ]
 }

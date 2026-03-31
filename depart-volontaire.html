@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Calcul Départ Volontaire ou Retraite Maroc 2026 | HuquqPro</title>
+<meta content="Simulez les indemnités pour un départ volontaire, une démission ou une retraite selon le Code du travail marocain." name="description">
+<link href="css/style.css" rel="stylesheet"/>
+<style>
+    .result-preview {
+      background: rgba(255,255,255,0.05);
+      border-left: 3px solid var(--accent, #c9a96e);
+      padding: 1rem 1.2rem;
+      border-radius: 6px;
+      margin-bottom: 1.2rem;
+    }
+    .result-preview p { margin: 0.3rem 0; }
+    .result-preview strong { color: var(--accent, #c9a96e); font-size: 1.1rem; }
+    .result-hint { font-size: 0.85rem; opacity: 0.7; }
+    .hidden { display: none !important; }
+  </style>
+</meta><link href="https://cdicalc-gray.vercel.app/depart-volontaire" rel="canonical"/><meta content="Calcul Départ Volontaire ou Retraite Maroc 2026 | HuquqPro" property="og:title"/><meta content="Simulez les indemnités pour un départ volontaire, une démission ou une retraite selon le Code du travail marocain." property="og:description"/><meta content="https://cdicalc-gray.vercel.app/depart-volontaire" property="og:url"/><meta content="website" property="og:type"/><meta content="fr_MA" property="og:locale"/><meta content="summary" name="twitter:card"/><meta content="Calcul Départ Volontaire ou Retraite Maroc 2026 | HuquqPro" name="twitter:title"/><meta content="Simulez les indemnités pour un départ volontaire, une démission ou une retraite selon le Code du travail marocain." name="twitter:description"/><link href='data:image/svg+xml,&lt;svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"&gt;&lt;text y=".9em" font-size="90"&gt;⚖️&lt;/text&gt;&lt;/svg&gt;' rel="icon"/><meta content="index, follow" name="robots"/></head>
+<body class="app-page">
+<header class="site-header app-header">
+<div class="shell app-header-inner header-inner">
+<div>
+<div class="header-badge">HuquqPro</div>
+<h1 class="site-title">Calcul des indemnités de départ volontaire</h1>
+<p class="site-sub">
+          Remplissez votre module, lancez la simulation, puis recevez le PDF détaillé par email.
+        </p>
+</div>
+<a class="btn-secondary" href="index.html">Retour à l'accueil</a>
+</div>
+</header>
+<div class="module-tabs-wrap">
+<div class="module-tabs shell">
+<a class="module-tab" href="/simulateur-net-brut">Net vers Brut</a>
+<a class="module-tab" href="/rupture-cdi">Rupture CDI</a>
+<a class="module-tab" href="/rupture-cdd">Rupture CDD</a>
+<a aria-current="page" class="module-tab active" href="/depart-volontaire">Départ volontaire</a>
+<a class="module-tab" href="/cotisations-cnss">Cotisations CNSS</a>
+<a class="module-tab" href="/calcul-igr">Calcul IGR / IR</a>
+</div>
+</div>
+<main class="shell app-main main-layout">
+<section class="forms-column">
+
+
+
+<div class="module-panel active" id="panel-depart">
+<section class="card-section module-card-panel">
+<h2 class="panel-label" data-step="1">Départ volontaire</h2><p style="font-size:0.8rem; color:var(--muted); margin-bottom: 1.5rem; font-style: italic;">(Source : Bulletin Officiel, Code du travail et Loi de Finances 2026)</p>
+<div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.8rem;">
+<div class="update-badge" style="margin: 0;">✅ Barèmes en vigueur : 2026</div>
+<button class="btn-secondary share-btn" onclick="navigator.clipboard.writeText(window.location.href); this.textContent='Lien copié ✓'; setTimeout(()=&gt;this.textContent='Partager ce simulateur',2000);" style="min-height: 2.2rem; padding: 0 0.8rem; font-size: 0.85rem;" type="button">Partager ce simulateur</button>
+</div>
+<p class="panel-copy">Simulez les effets d'une démission ou d'un départ à la retraite avec livraison privée par email.</p>
+<form id="calc-form-depart" novalidate="">
+<fieldset class="field-group">
+<legend class="field-legend">Informations</legend>
+<div class="field-row two-col">
+<div class="field">
+<label for="depart-salaire">Salaire mensuel brut</label>
+<div class="input-wrap">
+<input id="depart-salaire" min="1" placeholder="Ex : 10 000" required="" step="0.01" type="number"/>
+<span class="input-unit">MAD</span>
+</div>
+</div>
+<div class="field">
+<label for="depart-categorie">Catégorie</label>
+<div class="select-wrap">
+<select id="depart-categorie" required="">
+<option value="non-cadre">Non-cadre</option>
+<option value="cadre">Cadre</option>
+</select>
+<span aria-hidden="true" class="select-arrow">▼</span>
+</div>
+</div>
+</div>
+<div class="field-row two-col section-gap">
+<div class="field">
+<label for="depart-annees">Années complètes</label>
+<div class="input-wrap">
+<input id="depart-annees" min="0" placeholder="Ex : 8" required="" type="number" value="0"/>
+<span class="input-unit">ans</span>
+</div>
+</div>
+<div class="field">
+<label for="depart-mois">Mois supplémentaires</label>
+<div class="input-wrap">
+<input id="depart-mois" max="11" min="0" placeholder="0" required="" type="number" value="0"/>
+<span class="input-unit">mois</span>
+</div>
+</div>
+</div>
+</fieldset>
+<fieldset class="field-group">
+<legend class="field-legend">Départ</legend>
+<div class="field-row two-col">
+<div class="field">
+<label for="depart-motif">Motif de départ</label>
+<div class="select-wrap">
+<select id="depart-motif" required="">
+<option value="demission">Démission</option>
+<option value="retraite_legale">Départ à la retraite légale</option>
+<option value="retraite_anticipee">Retraite anticipée (employeur)</option>
+</select>
+<span aria-hidden="true" class="select-arrow">▼</span>
+</div>
+</div>
+<div class="field">
+<label for="depart-conges">Congés payés restants</label>
+<div class="input-wrap">
+<input id="depart-conges" min="0" placeholder="Ex : 12" step="0.5" type="number" value="0"/>
+<span class="input-unit">jours</span>
+</div>
+</div>
+</div>
+</fieldset>
+<div class="form-actions">
+<button class="btn-reset" id="btn-reset-depart" type="button">Réinitialiser</button>
+<button class="btn-calculate" id="btn-calculate-depart" type="submit">Calculer le départ</button>
+</div>
+</form>
+</section>
+</div>
+
+
+</section>
+<aside aria-live="polite" class="card-section delivery-panel" id="delivery-panel">
+<h2 class="panel-label" data-step="2">Livraison privée</h2>
+<p class="delivery-copy" id="delivery-copy">Aucun montant n'est affiché à l'écran. Chaque simulation détaillée est livrée par email.</p>
+<div class="delivery-benefits">
+<div class="benefit-item">PDF personnalisé selon le module actif</div>
+<div class="benefit-item">Base juridique et variables de calcul résumées</div>
+<div class="benefit-item">Envoi sécurisé via une fonction serverless</div>
+</div>
+<div class="results-placeholder" id="delivery-placeholder">
+<div aria-hidden="true" class="placeholder-icon">🔒</div>
+<p id="delivery-placeholder-text">
+          Remplissez un formulaire puis lancez la simulation pour ouvrir le parcours email.
+        </p>
+</div>
+<div aria-live="polite" class="result-preview hidden" id="result-preview"></div>
+<form class="email-form-container hidden" id="lead-form" novalidate="">
+<div class="email-form-card" id="lead-gate">
+<h3 class="ef-title">Recevoir votre simulation par email</h3>
+<p class="ef-subtitle">Module préparé : <strong id="lead-module-name">Net vers Brut</strong></p>
+<input id="lead-module" type="hidden"/>
+<div class="ef-field">
+<label for="lead-name">Nom (optionnel)</label>
+<input id="lead-name" maxlength="80" placeholder="Optionnel" type="text"/>
+</div>
+<div class="ef-field">
+<label for="lead-email">Adresse email *</label>
+<input id="lead-email" maxlength="120" placeholder="votre@email.com" required="" type="email"/>
+</div>
+<input autocomplete="off" class="hp-field" id="lead-website" tabindex="-1" type="text"/>
+<div class="ef-actions">
+<button class="btn-calculate" id="lead-submit" type="submit">Recevoir mon PDF</button>
+<button class="btn-secondary" id="lead-cancel" type="button">Annuler</button>
+</div>
+<div class="ef-status" id="lead-status"></div>
+<p class="ef-legal">Votre adresse sert uniquement à l'envoi de la simulation demandée.</p>
+</div>
+</form>
+<div class="delivery-success hidden" id="delivery-success"></div>
+<button class="btn-secondary delivery-back" id="delivery-back" type="button">Modifier les variables</button>
+</aside>
+</main>
+<footer class="site-footer">
+<div class="footer-inner">
+<p class="footer-brand">© 2026 <strong>HuquqPro</strong></p>
+<p class="footer-legal">Simulation indicative — Ne remplace pas un conseil juridique ou comptable professionnel.</p>
+<div class="footer-meta">
+<span>📅 Barèmes CNSS, AMO et IR — 2026</span>
+<span class="footer-sep">·</span>
+<a href="mailto:rafael.pullian@gmail.com">contact@huquqpro.com</a>
+<span class="footer-sep">·</span>
+<a href="/confidentialite.html">Confidentialité</a>
+</div>
+</div>
+</footer>
+<script>
+    // Inject partial result preview before the email form opens
+    // Called by calculator.js via window.showResultPreview(module, value, label, hint)
+    window.showResultPreview = function(module, value, label, hint) {
+      const preview = document.getElementById('result-preview');
+      const placeholder = document.getElementById('delivery-placeholder');
+      if (!preview) return;
+      preview.innerHTML =
+        '<p>✅ ' + label + ' : <strong>' + value + ' MAD</strong></p>' +
+        '<p class="result-hint">📄 ' + hint + ' → par email</p>';
+      preview.classList.remove('hidden');
+      if (placeholder) placeholder.classList.add('hidden');
+    };
+
+    window.hideResultPreview = function() {
+      const preview = document.getElementById('result-preview');
+      const placeholder = document.getElementById('delivery-placeholder');
+      if (preview) preview.classList.add('hidden');
+      if (placeholder) placeholder.classList.remove('hidden');
+    };
+  </script>
+<script defer="" src="js/calculator.js"></script>
+<script defer="" src="js/router.js"></script>
+<script defer="" src="js/ui.js"></script>
+<script defer="" src="js/email.js"></script>
+</body>
+</html>

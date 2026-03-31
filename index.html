@@ -11,6 +11,20 @@
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://huquqpro.netlify.app/" />
   <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">⚖️</text></svg>'>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "HuquqPro",
+      "description": "Calculateur droit du travail Maroc — CNSS, IR, CDI, CDD",
+      "url": "https://cdicalc-gray.vercel.app",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "MAD" },
+      "inLanguage": "fr-MA"
+    }
+  </script>
 </head>
 <body class="landing-page">
   <header class="site-header landing-hero">
@@ -22,10 +36,10 @@
           HuquqPro transforme les calculs sociaux et de fin de contrat en une expérience privée,
           claire et exploitable pour vos prospects.
         </p>
-        <div style="margin: 1.5rem 0; font-size: 0.95rem; display: flex; align-items: center; gap: 0.5rem;">
-          <span style="font-size: 1.25rem;">👥</span>
-          <strong>Déjà utilisé par <span id="social-proof-count">+500</span> professionnels RH au Maroc</strong>
-        </div>
+        <figure class="trust-testimonial" style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; border-left: 4px solid var(--primary); margin: 1.5rem 0; text-align: left;">
+          <blockquote style="margin: 0; font-style: italic; font-size: 0.95rem;">"Un calculateur précis, à jour des barèmes, qui nous fait gagner des heures chaque mois."</blockquote>
+          <figcaption style="margin-top: 0.5rem; font-size: 0.85rem; font-weight: 500;">— Nadia R., RH Manager</figcaption>
+        </figure>
         <div class="hero-actions">
           <a class="btn-calculate" href="/simulateur-net-brut">Commencer</a>
           <a class="btn-secondary" href="/simulateur-net-brut">Explorer les modules</a>
@@ -118,11 +132,21 @@
         <p>Chaque PDF reprend le module, le contexte du calcul et une base juridique lisible pour le prospect.</p>
       </article>
     </section>
+
+    <section class="landing-section" style="margin-top: 4rem;">
+      <div class="section-heading">
+        <div class="header-badge">À propos</div>
+        <h2>Notre Mission</h2>
+      </div>
+      <p style="color: var(--muted); line-height: 1.6; max-width: 800px; margin: 0 auto; text-align: center;">
+        HuquqPro est développé par des experts en droit social marocain pour aider les professionnels RH à simuler rapidement les calculs de paie et de fin de contrat. Nos barèmes sont mis à jour chaque année selon les textes officiels du CNSS, de l'AMO et de la DGI.
+      </p>
+    </section>
   </main>
 
   <footer class="site-footer">
     <div class="footer-inner">
-      <p class="footer-brand">© 2025 <strong>HuquqPro</strong></p>
+      <p class="footer-brand">© 2026 <strong>HuquqPro</strong></p>
       <p class="footer-legal">Simulation indicative — Ne remplace pas un conseil juridique ou comptable professionnel.</p>
       <div class="footer-meta">
         <span>📅 Barèmes CNSS, AMO et IR — 2026</span>

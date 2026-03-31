@@ -534,7 +534,7 @@
         if (response.status === 501) {
           message = `Backend local indisponible sur ${endpoint}. Utilisez netlify dev ou netlify functions:serve --port 9999.`;
         } else {
-          message = 'Envoi impossible. Réessayez.';
+          message = "Erreur d'envoi — réessayez dans quelques minutes.";
         }
       }
       throw new Error(message);
@@ -552,8 +552,8 @@
 
       const submit = $('lead-submit');
       submit.disabled = true;
-      submit.textContent = 'Envoi en cours...';
-      window.HUQUQPRO_UI.setLeadStatus('Préparation du PDF en cours...');
+      submit.innerHTML = '<span class="spinner" style="display:inline-block; width:14px; height:14px; border:2px solid currentColor; border-top-color:transparent; border-radius:50%; animation:spin 1s linear infinite; margin-right:8px; vertical-align:middle;"></span>Génération en cours...';
+      window.HUQUQPRO_UI.setLeadStatus('');
 
       try {
         const sent = await sendPendingSimulation();
@@ -561,7 +561,7 @@
       } catch (error) {
         submit.disabled = false;
         submit.textContent = 'Recevoir mon PDF';
-        window.HUQUQPRO_UI.setLeadStatus(error.message, 'error');
+        window.HUQUQPRO_UI.setLeadStatus("Erreur d'envoi — réessayez dans quelques minutes.", 'error');
       }
     });
 
